@@ -2,1354 +2,818 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-Term Grade Calculator · DepEd Student & Parent Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>3-Term Grade Calculator · DepEd Student &amp; Parent Portal</title>
 <style>
 /* ==========================================================================
-   3-TERM GRADE CALCULATOR — PREMIUM STUDENT-FRIENDLY PORTAL
-   DepEd MATATAG / K-12 Compliant · Emerging to Advancing Scale
-   Zero external dependencies · 100% Offline & Google Apps Script Ready
+   3-TERM GRADE CALCULATOR — FLAT iOS EDITION
+   DepEd MATATAG / K-12 · Emerging-to-Advancing scale · DO 8 & DO 15
+   100% offline · single file · phone / tablet / laptop responsive
    ========================================================================== */
-:root {
-  --primary: #1e3a8a;          /* Deep Royal Blue */
-  --primary-light: #3b82f6;    /* Vibrant Blue */
-  --primary-dark: #0f172a;     /* Slate Dark */
-  --primary-subtle: #eff6ff;   /* Soft Blue Tint */
-  --accent: #f59e0b;           /* Amber / Gold */
-  --accent-light: #fbbf24;
-  --accent-soft: #fef3c7;
-  
-  /* Performance Level Colors (Emerging to Advancing) */
-  --color-adv: #059669;        /* Advancing: Emerald Green */
-  --color-adv-bg: #ecfdf5;
-  --color-adv-border: #a7f3d0;
-  
-  --color-con: #0284c7;        /* Connecting: Ocean Cyan / Blue */
-  --color-con-bg: #f0f9ff;
-  --color-con-border: #bae6fd;
-  
-  --color-dev: #d97706;        /* Developing: Warm Amber */
-  --color-dev-bg: #fffbeb;
-  --color-dev-border: #fde68a;
-  
-  --color-eme: #dc2626;        /* Emerging: Crimson Red */
-  --color-eme-bg: #fef2f2;
-  --color-eme-border: #fecaca;
-
-  --surface: #ffffff;
-  --surface-alt: #f8fafc;
-  --bg: #f1f5f9;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --border-focus: #3b82f6;
-  
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 18px;
-  --radius-full: 9999px;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-  background-attachment: fixed;
-  color: var(--text);
-  line-height: 1.5;
-  font-size: 14px;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* App Shell Container */
-.app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 16px 40px;
-}
-
-/* ==========================================================================
-   HEADER & STUDENT HERO CARD
-   ========================================================================== */
-.app-header {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #1d4ed8 100%);
-  color: #fff;
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  margin-bottom: 22px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.app-header::after {
-  content: "";
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.brand-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.brand-icon {
-  width: 52px;
-  height: 52px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.brand-title {
-  font-size: 1.55rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.brand-badge {
-  font-size: 0.72rem;
-  font-weight: 800;
-  background: var(--accent);
-  color: #78350f;
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-}
-
-.brand-sub {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.88);
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* Profile Form Bar */
-.profile-bar {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 14px;
-  align-items: end;
-}
-
-.profile-field label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 5px;
-}
-
-.profile-field input, .profile-field select {
-  width: 100%;
-  padding: 9px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.98);
-  color: #0f172a;
-  font-size: 0.9rem;
-  font-weight: 600;
-  outline: none;
-  transition: all 0.2s ease;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.profile-field input:focus, .profile-field select:focus {
-  border-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.45);
-  background: #ffffff;
-}
-
-/* ==========================================================================
-   BUTTONS & BADGES
-   ========================================================================== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 9px 16px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  text-decoration: none;
-  line-height: 1;
-}
-
-.btn:active { transform: scale(0.97); }
-
-.btn-primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
-}
-.btn-primary:hover {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.35);
-}
-
-.btn-light {
-  background: #ffffff;
-  color: #1e3a8a;
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-}
-.btn-light:hover { background: #f8fafc; color: #1d4ed8; }
-
-.btn-outline {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-}
-.btn-outline:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #ffffff;
-}
-
-.btn-outline-dark {
-  background: #ffffff;
-  border-color: var(--border);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-}
-.btn-outline-dark:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: var(--primary);
-}
-
-.btn-danger {
-  background: #fee2e2;
-  color: #b91c1c;
-  border-color: #fca5a5;
-}
-.btn-danger:hover {
-  background: #fecaca;
-  color: #991b1b;
-}
-
-.btn-delete-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 6px 10px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-.btn-delete-item:hover {
-  background: #dc2626;
-  color: #ffffff;
-  border-color: #dc2626;
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25);
-}
-
-.btn-sm { padding: 6px 11px; font-size: 0.78rem; border-radius: 6px; }
-
-/* ==========================================================================
-   SUBJECT SELECTOR BAR
-   ========================================================================== */
-.subject-nav {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  overflow-x: auto;
-}
-
-.subject-pills {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: thin;
-}
-
-.subject-pill {
-  padding: 8px 14px;
-  border-radius: var(--radius-full);
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  cursor: pointer;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.subject-pill:hover {
-  background: #e2e8f0;
-  color: var(--text);
-  transform: translateY(-1px);
-}
-
-.subject-pill.active {
-  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-  color: #ffffff;
-  border-color: #1e3a8a;
-  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.3);
-}
-
-.subject-pill .pill-grade {
-  background: rgba(0, 0, 0, 0.08);
-  color: inherit;
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 10px;
-}
-.subject-pill.active .pill-grade {
-  background: var(--accent);
-  color: #78350f;
-}
-
-/* ==========================================================================
-   TABS BAR
-   ========================================================================== */
-.tabs-bar {
-  display: flex;
-  gap: 6px;
-  border-bottom: 2px solid #e2e8f0;
-  margin-bottom: 22px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tabs-bar::-webkit-scrollbar { display: none; }
-
-.tab-btn {
-  padding: 12px 20px;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  border-radius: 6px 6px 0 0;
-}
-
-.tab-btn:hover { color: var(--primary-light); background: rgba(59, 130, 246, 0.04); }
-
-.tab-btn.active {
-  color: #1d4ed8;
-  border-bottom-color: #2563eb;
-  background: rgba(37, 99, 235, 0.06);
-}
-
-.tab-btn .tab-badge {
-  background: #e2e8f0;
-  color: var(--text);
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-
-.tab-btn.active .tab-badge {
-  background: #2563eb;
-  color: #ffffff;
-}
-
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: tabFadeIn 0.2s ease; }
-
-@keyframes tabFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   WEIGHTS BAR & PRESETS
-   ========================================================================== */
-.term-weights-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.weights-presets {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.weights-presets label {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.weights-inputs {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.weight-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--surface-alt);
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.weight-pill input {
-  width: 48px;
-  padding: 4px 6px;
-  font-size: 0.88rem;
-  font-weight: 800;
-  text-align: center;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  outline: none;
-  background: #ffffff;
-}
-.weight-pill input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-
-/* ==========================================================================
-   ASSESSMENT CARDS GRID
-   ========================================================================== */
-.assessment-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 20px;
-  margin-bottom: 22px;
-}
-
-.assess-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.assess-card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.card-header {
-  padding: 14px 18px;
-  background: var(--surface-alt);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-header h3 {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-header .comp-tag {
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: var(--radius-full);
-}
-
-.assess-card.ww .comp-tag { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-.assess-card.pt .comp-tag { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.assess-card.ex .comp-tag { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
-
-.card-body {
-  padding: 16px 18px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Assessment Items Table */
-.items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.item-row {
-  display: grid;
-  grid-template-columns: 28px 1fr 70px 70px 80px;
-  gap: 8px;
-  align-items: center;
-}
-
-.item-row-header {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-bottom: 6px;
-  border-bottom: 1px dashed var(--border);
-}
-
-.item-num {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-align: center;
-  background: #f1f5f9;
-  border-radius: 4px;
-  padding: 3px 0;
-}
-
-.item-name-input, .item-hps-input, .item-score-input {
-  padding: 7px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  font-size: 0.88rem;
-  outline: none;
-  transition: all 0.15s ease;
-  background: #ffffff;
-}
-
-.item-name-input { font-weight: 600; color: var(--text); }
-.item-hps-input, .item-score-input {
-  font-weight: 800;
-  text-align: center;
-}
-
-.item-score-input { color: #1e3a8a; }
-
-.item-name-input:focus, .item-hps-input:focus, .item-score-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-}
-
-.card-footer {
-  padding: 12px 18px;
-  background: var(--surface-alt);
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.stat-pill {
-  display: flex;
-  flex-direction: column;
-}
-.stat-pill .stat-lbl {
-  font-size: 0.68rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.stat-pill .stat-val {
-  font-size: 0.98rem;
-  font-weight: 800;
-  color: var(--text);
-}
-
-/* ==========================================================================
-   TERM RESULT SCORE BANNER
-   ========================================================================== */
-.term-result-banner {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 60%, #1d4ed8 100%);
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 20px 26px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 18px;
-  align-items: center;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 24px;
-}
-
-.result-metric {
-  display: flex;
-  flex-direction: column;
-}
-
-.result-metric .lbl {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 2px;
-}
-
-.result-metric .val {
-  font-size: 2.1rem;
-  font-weight: 900;
-  color: #ffffff;
-  line-height: 1.1;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.result-metric .desc {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--accent-light);
-  margin-top: 4px;
-}
-
-.level-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-}
-
-.badge-adv { background: #059669; color: #ffffff; }
-.badge-con { background: #0284c7; color: #ffffff; }
-.badge-dev { background: #d97706; color: #ffffff; }
-.badge-eme { background: #dc2626; color: #ffffff; }
-
-/* ==========================================================================
-   LEGEND BOX (EMERGING TO ADVANCING)
-   ========================================================================== */
-.descriptor-legend-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 22px;
-  margin-top: 24px;
-  box-shadow: var(--shadow-sm);
-}
-
-.legend-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.legend-header h4 {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.legend-header span {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.legend-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.legend-chip {
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.legend-chip.chip-adv { background: var(--color-adv-bg); border-color: var(--color-adv-border); }
-.legend-chip.chip-con { background: var(--color-con-bg); border-color: var(--color-con-border); }
-.legend-chip.chip-dev { background: var(--color-dev-bg); border-color: var(--color-dev-border); }
-.legend-chip.chip-eme { background: var(--color-eme-bg); border-color: var(--color-eme-border); }
-
-.chip-title {
-  font-size: 0.9rem;
-  font-weight: 800;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.legend-chip.chip-adv .chip-title { color: var(--color-adv); }
-.legend-chip.chip-con .chip-title { color: var(--color-con); }
-.legend-chip.chip-dev .chip-title { color: var(--color-dev); }
-.legend-chip.chip-eme .chip-title { color: var(--color-eme); }
-
-.chip-range {
-  font-size: 0.8rem;
-  font-weight: 800;
-  background: rgba(0, 0, 0, 0.06);
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-
-.chip-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  line-height: 1.35;
-}
-
-/* ==========================================================================
-   REPORT CARD / 3-TERM SUMMARY TABLE
-   ========================================================================== */
-.report-card-wrap {
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  padding: 22px;
-  margin-bottom: 22px;
-}
-
-.report-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 14px;
-}
-
-.report-table th, .report-table td {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  text-align: center;
-}
-
-.report-table th {
-  background: #f8fafc;
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.report-table td.subject-name {
-  text-align: left;
-  font-weight: 700;
-  color: var(--primary-dark);
-}
-
-.report-table td.grade-val {
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.report-table tr.gen-avg-row {
-  background: #fffbeb;
-  font-weight: 800;
-}
-.report-table tr.gen-avg-row td {
-  border-top: 2px solid var(--accent);
-  font-size: 1.1rem;
-}
-
-/* ==========================================================================
-   WHAT-IF / GOAL PLANNER
-   ========================================================================== */
-.goal-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  box-shadow: var(--shadow-sm);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-}
-@media (max-width: 768px) { .goal-card { grid-template-columns: 1fr; } }
-
-.goal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.goal-output {
-  background: #f8fafc;
-  border: 2px dashed #93c5fd;
-  border-radius: var(--radius);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* ==========================================================================
-   ACCESS & AUDIT LOG TABLE (PRIVACY PROTECTED / BLURRED)
-   ========================================================================== */
-.log-section-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-top: 24px;
-  box-shadow: var(--shadow-sm);
-}
-
-.log-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.log-title-area h3 {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.log-privacy-notice {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 0.8rem;
-  color: #166534;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.log-table-wrap {
-  overflow-x: auto;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-}
-
-.log-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.82rem;
-  white-space: nowrap;
-}
-
-.log-table th {
-  background: #f1f5f9;
-  padding: 10px 12px;
-  font-weight: 800;
-  color: var(--primary-dark);
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-}
-
-.log-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #f1f5f9;
-  vertical-align: middle;
-}
-
-.log-table tr:hover td {
-  background: #f8fafc;
-}
-
-/* Privacy Blur Effect for Confidential Log Fields */
-.blurred-field {
-  filter: blur(5px);
-  user-select: none;
-  background: rgba(148, 163, 184, 0.25);
-  padding: 3px 8px;
-  border-radius: 4px;
-  display: inline-block;
-  cursor: not-allowed;
-  font-family: inherit;
-  color: #334155;
-  transition: filter 0.15s;
-}
-
-.visible-badge {
-  font-weight: 700;
-  color: var(--primary-dark);
-  background: #e2e8f0;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.78rem;
-}
-
-/* ==========================================================================
-   GOOGLE APPS SCRIPT HELPER MODAL / SECTION
-   ========================================================================== */
-.gas-box {
-  background: #f8fafc;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  margin-top: 18px;
-  font-size: 0.82rem;
-}
-
-.gas-code-preview {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 12px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 0.78rem;
-  overflow-x: auto;
-  margin-top: 8px;
-}
-
-/* Toast */
-.toast-msg {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: #0f172a;
-  color: #ffffff;
-  padding: 12px 20px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  font-weight: 700;
-  box-shadow: var(--shadow-xl);
-  display: none;
-  z-index: 1000;
-  border-left: 4px solid var(--accent);
-}
-
-/* Print Styles */
-@media print {
-  body { background: #fff !important; font-size: 11px; }
-  .app-header .header-actions, .subject-nav, .tabs-bar, .btn, .btn-delete-item, .log-section-card, .gas-box, .toast-msg { display: none !important; }
-  .app-container { max-width: 100%; padding: 0; }
-  .app-header { background: #fff !important; color: #000 !important; box-shadow: none; border: 1px solid #ccc; margin-bottom: 10px; padding: 14px; }
-  .brand-title { color: #000 !important; }
-  .profile-bar { background: transparent !important; border: 1px solid #ccc !important; color: #000 !important; }
-  .profile-field label { color: #555 !important; }
-  .profile-field input, .profile-field select { border: 1px solid #999; background: #fff; color: #000; }
-  .tab-content { display: block !important; }
-  .assessment-grid { page-break-inside: avoid; }
-  .term-result-banner { background: #f0f0f0 !important; color: #000 !important; border: 1px solid #999; }
-  .result-metric .lbl, .result-metric .val, .result-metric .desc { color: #000 !important; }
-  .descriptor-legend-card { page-break-inside: avoid; }
+:root{
+  --blue:#007AFF; --blue-deep:#0062CC;
+  --green:#34C759; --green-deep:#248A3D;
+  --orange:#FF9500; --orange-deep:#B25B00;
+  --red:#FF3B30; --red-deep:#D70015;
+  --purple:#AF52DE; --indigo:#5856D6; --teal:#32ADE6;
+
+  --bg:#F2F2F7;
+  --card:#FFFFFF;
+  --text:#1C1C1E;
+  --text-2:rgba(60,60,67,.62);
+  --text-3:rgba(60,60,67,.38);
+  --sep:rgba(60,60,67,.14);
+  --fill:rgba(118,118,128,.10);
+  --fill-2:rgba(118,118,128,.16);
+  --fill-3:rgba(118,118,128,.22);
+
+  --tint-adv:rgba(52,199,89,.14);
+  --tint-con:rgba(0,122,255,.12);
+  --tint-dev:rgba(255,149,0,.16);
+  --tint-eme:rgba(255,59,48,.12);
+  --tint-none:rgba(120,120,128,.12);
+
+  --r-lg:18px; --r:14px; --r-sm:11px; --r-xs:9px;
+  --shadow-card:0 1px 2px rgba(0,0,0,.04),0 4px 14px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{max-width:100%;overflow-x:clip;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+  font-size:15px;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+button{cursor:pointer;border:0;background:none;touch-action:manipulation;}
+img,svg{vertical-align:middle;}
+:focus-visible{outline:2.5px solid rgba(0,122,255,.55);outline-offset:2px;border-radius:6px;}
+
+/* ---------- iOS app bar (sticky, frosted) ---------- */
+.appbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--sep);
+  padding-top:env(safe-area-inset-top);
+}
+.appbar-inner{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 16px;min-height:54px;
+}
+.appbar-brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.appbar-logo{
+  width:34px;height:34px;flex:0 0 auto;border-radius:9px;
+  background:var(--blue);display:grid;place-items:center;
+}
+.appbar-title{font-size:16px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.appbar-badge{
+  font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--tint-con);color:var(--blue-deep);
+  padding:3px 8px;border-radius:999px;flex:0 0 auto;
+}
+.appbar-actions{display:flex;gap:7px;flex:0 0 auto;}
+.abtn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:36px;height:36px;padding:0 12px;border-radius:11px;
+  background:var(--fill-2);color:var(--text);
+  font-size:13.5px;font-weight:600;letter-spacing:-.01em;
+  transition:transform .12s ease,background .15s ease;
+}
+.abtn svg{flex:0 0 auto;}
+.abtn:active{transform:scale(.94);background:var(--fill-3);}
+.abtn.primary{background:var(--blue);color:#fff;}
+.abtn.primary:active{background:var(--blue-deep);}
+
+/* ---------- Page scaffold ---------- */
+.page{max-width:1180px;margin:0 auto;padding:20px 16px calc(28px + env(safe-area-inset-bottom));}
+.title-block{padding:6px 2px 16px;}
+.title-block h1{font-size:clamp(24px,4.5vw,32px);font-weight:800;letter-spacing:-.022em;}
+.title-block p{color:var(--text-2);font-size:14.5px;margin-top:3px;font-weight:500;}
+.stack > * + *{margin-top:16px;}
+
+.card{
+  background:var(--card);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-card);
+  padding:18px;
+}
+.card-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:wrap;margin-bottom:14px;
+}
+.card-head h2{font-size:17.5px;font-weight:700;letter-spacing:-.015em;}
+.card-head .sub{font-size:13px;color:var(--text-2);font-weight:500;margin-top:1px;}
+
+/* ---------- Mini labels & fields ---------- */
+.mini-label{
+  display:block;font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text-2);margin-bottom:6px;
+}
+.field input,.field select{
+  width:100%;min-width:0;padding:11px 13px;
+  font-size:15px;font-weight:600;letter-spacing:-.01em;
+  background:var(--fill);border:1.5px solid transparent;border-radius:var(--r-sm);
+  outline:none;color:var(--text);
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
+  appearance:none;-webkit-appearance:none;
+}
+.field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;
+}
+.field input::placeholder{color:var(--text-3);font-weight:500;}
+.field input:focus,.field select:focus{
+  background:#fff;border-color:var(--blue);
+  box-shadow:0 0 0 3.5px rgba(0,122,255,.16);
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+input[type=number]{-moz-appearance:textfield;appearance:textfield;}
+
+/* ---------- Profile grid ---------- */
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px 14px;}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 16px;border-radius:var(--r-sm);
+  font-size:14px;font-weight:650;letter-spacing:-.01em;line-height:1;
+  transition:transform .12s ease,filter .15s ease,background .15s ease;
+  min-height:38px;
+}
+.btn:active{transform:scale(.96);}
+.btn-sm{padding:8px 13px;min-height:34px;font-size:13px;border-radius:10px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:active{background:var(--blue-deep);}
+.btn-tonal{background:var(--tint-con);color:var(--blue-deep);}
+.btn-tonal:active{background:rgba(0,122,255,.22);}
+.btn-gray{background:var(--fill-2);color:var(--text);}
+.btn-gray:active{background:var(--fill-3);}
+.btn-danger{background:var(--tint-eme);color:var(--red-deep);}
+.btn-danger:active{background:rgba(255,59,48,.22);}
+
+/* ---------- Subject pills ---------- */
+.pills{display:flex;flex-wrap:wrap;gap:8px;}
+.subject-pill{
+  display:inline-flex;align-items:center;gap:9px;
+  max-width:100%;padding:9px 13px;border-radius:12px;
+  background:var(--fill);color:var(--text);
+  font-size:13.5px;font-weight:650;letter-spacing:-.01em;
+  transition:transform .12s ease,background .15s ease;
+  border:1.5px solid transparent;min-height:38px;
+}
+.subject-pill:active{transform:scale(.96);}
+.subject-pill .pill-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;}
+.subject-pill .pill-grade{
+  flex:0 0 auto;min-width:30px;text-align:center;
+  font-size:12px;font-weight:800;padding:3px 8px;border-radius:999px;
+  background:#fff;color:var(--text-2);box-shadow:inset 0 0 0 1px var(--sep);
+}
+.subject-pill.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 4px 12px rgba(0,122,255,.28);}
+.subject-pill.active .pill-grade{background:rgba(255,255,255,.22);color:#fff;box-shadow:none;}
+
+/* ---------- Segmented tab control ---------- */
+.seg{
+  display:flex;flex-wrap:wrap;gap:4px;
+  background:var(--fill-2);border-radius:13px;padding:4px;
+}
+.seg-btn{
+  flex:1 1 auto;min-width:112px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;border-radius:10px;
+  font-size:13.5px;font-weight:650;letter-spacing:-.01em;color:var(--text);
+  transition:background .15s ease,box-shadow .15s ease,transform .1s ease;
+  min-height:40px;
+}
+.seg-btn:active{transform:scale(.97);}
+.seg-btn.active{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.10);}
+.seg-badge{
+  font-size:11.5px;font-weight:800;min-width:26px;text-align:center;
+  background:var(--fill-3);color:var(--text-2);padding:2.5px 7px;border-radius:999px;
+}
+.seg-btn.active .seg-badge{background:var(--tint-con);color:var(--blue-deep);}
+
+/* ---------- Term view: weights card ---------- */
+.weights-card .wc-row{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;}
+.wc-presets{flex:1 1 260px;min-width:0;}
+.wc-btns{display:flex;flex-wrap:wrap;gap:8px;}
+.wc-inputs{display:flex;flex-wrap:wrap;gap:10px;flex:2 1 340px;min-width:0;}
+.weight-field{flex:1 1 96px;min-width:96px;max-width:150px;}
+.weight-field span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;}
+.weight-field input{
+  width:100%;padding:10px 12px;text-align:center;
+  font-size:15px;font-weight:750;color:var(--blue-deep);
+  background:var(--fill);border:1.5px solid transparent;border-radius:var(--r-sm);outline:none;
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
+}
+.weight-field input:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3.5px rgba(0,122,255,.16);}
+
+/* ---------- Assessment cards ---------- */
+.assess-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;}
+.assess-card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:16px;display:flex;flex-direction:column;min-width:0;}
+.ac-head{display:flex;align-items:center;gap:11px;margin-bottom:13px;min-width:0;}
+.ac-icon{width:32px;height:32px;flex:0 0 auto;border-radius:9.5px;display:grid;place-items:center;}
+.ac-head h3{font-size:15.5px;font-weight:700;letter-spacing:-.015em;flex:1 1 auto;min-width:0;}
+.ac-tag{
+  flex:0 0 auto;font-size:11.5px;font-weight:800;letter-spacing:.02em;
+  padding:4px 9px;border-radius:999px;white-space:nowrap;
+}
+.ac-ww .ac-icon{background:var(--tint-con);color:var(--blue);}
+.ac-ww .ac-tag{background:var(--tint-con);color:var(--blue-deep);}
+.ac-pt .ac-icon{background:rgba(175,82,222,.13);color:var(--purple);}
+.ac-pt .ac-tag{background:rgba(175,82,222,.13);color:#8E44AD;}
+.ac-ex .ac-icon{background:var(--tint-dev);color:var(--orange);}
+.ac-ex .ac-tag{background:var(--tint-dev);color:var(--orange-deep);}
+
+.item-row-header{display:flex;gap:8px;align-items:center;padding:2px 6px 7px;}
+.item-row-header span{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);}
+.item-row-header .h-name{flex:1 1 150px;min-width:0;}
+.item-row-header .h-hps,.item-row-header .h-score{flex:0 0 74px;width:74px;text-align:center;}
+.item-row-header .h-act{flex:0 0 78px;text-align:center;}
+
+.items-list{background:var(--fill);border-radius:14px;padding:4px;display:flex;flex-direction:column;gap:4px;}
+.item-row{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:#fff;border-radius:11px;padding:8px 10px;min-width:0;
+}
+.item-num{
+  flex:0 0 22px;width:22px;height:22px;border-radius:50%;
+  background:var(--fill-2);color:var(--text-2);
+  display:grid;place-items:center;font-size:11.5px;font-weight:800;
+}
+.item-name-input{
+  flex:1 1 140px;min-width:0;border:0;outline:none;background:transparent;
+  font-size:14px;font-weight:600;letter-spacing:-.01em;padding:8px 4px;
+  border-bottom:1.5px solid transparent;
+}
+.item-name-input::placeholder{color:var(--text-3);font-weight:500;}
+.item-name-input:focus{border-bottom-color:var(--blue);}
+.item-hps-input,.item-score-input{
+  flex:0 0 74px;width:74px;min-width:0;text-align:center;
+  padding:9px 6px;border-radius:9px;border:1.5px solid transparent;outline:none;
+  background:var(--fill);font-size:14px;font-weight:750;
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
+}
+.item-hps-input::placeholder,.item-score-input::placeholder{color:var(--text-3);font-weight:600;}
+.item-hps-input:focus,.item-score-input:focus{background:#fff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,122,255,.16);}
+.item-share{
+  flex:0 0 74px;text-align:center;font-size:12px;font-weight:800;color:var(--text-2);
+  padding:9px 4px;
+}
+.btn-del{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;
+  padding:8px 11px;border-radius:9px;
+  background:var(--tint-eme);color:var(--red-deep);
+  font-size:12.5px;font-weight:750;letter-spacing:-.01em;
+  transition:transform .12s ease,background .15s ease;min-height:34px;
+}
+.btn-del:active{transform:scale(.93);background:rgba(255,59,48,.22);}
+.items-empty{
+  background:#fff;border-radius:11px;padding:16px 12px;text-align:center;
+  color:var(--text-2);font-size:13px;font-weight:550;
+}
+.add-row{margin-top:10px;}
+.add-row .btn{width:100%;}
+
+.ac-stats{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;
+  border-top:1px solid var(--sep);padding-top:12px;
+}
+.stat{flex:1 1 100px;min-width:100px;background:var(--fill);border-radius:11px;padding:9px 12px;}
+.stat .s-l{display:block;font-size:10.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);}
+.stat .s-v{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em;margin-top:2px;font-variant-numeric:tabular-nums;}
+.stat .s-v.hl{color:var(--blue-deep);}
+
+/* ---------- Term result banner ---------- */
+.result-banner{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;
+  border-radius:var(--r-lg);padding:18px;margin-top:16px;
+  background:var(--card);box-shadow:var(--shadow-card);
+  transition:background .3s ease;
+}
+.rb-metric{flex:1 1 170px;min-width:170px;}
+.rb-lbl{display:block;font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--text-2);}
+.rb-val{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums;}
+.rb-val.big{font-size:40px;line-height:1.05;}
+.rb-sub{display:block;font-size:12.5px;font-weight:550;color:var(--text-2);margin-top:2px;}
+.rb-badge-wrap{flex:0 0 auto;margin-left:auto;}
+.level-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:800;letter-spacing:-.01em;
+  padding:8px 14px;border-radius:999px;white-space:nowrap;
+}
+.level-badge .lb-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto;}
+.lv-adv{background:var(--tint-adv);color:var(--green-deep);}
+.lv-con{background:var(--tint-con);color:var(--blue-deep);}
+.lv-dev{background:var(--tint-dev);color:var(--orange-deep);}
+.lv-eme{background:var(--tint-eme);color:var(--red-deep);}
+.lv-none{background:var(--tint-none);color:var(--text-2);}
+
+/* ---------- Tables (summary + access log) ---------- */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px;}
+table.report{width:100%;min-width:640px;border-collapse:collapse;}
+table.report th{
+  font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-2);padding:8px 10px;border-bottom:1px solid var(--sep);
+  text-align:center;white-space:nowrap;
+}
+table.report th:first-child{text-align:left;}
+table.report td{
+  padding:11px 10px;border-bottom:1px solid var(--sep);
+  text-align:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;
+}
+table.report td:first-child{text-align:left;font-weight:650;}
+table.report tbody tr:last-child td{border-bottom:0;}
+table.report tfoot td{border-top:1.5px solid var(--sep);border-bottom:0;font-weight:800;}
+table.report .subj-cell{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.grade-dash{color:var(--text-3);font-weight:600;}
+.gen-final{color:var(--blue-deep);}
+
+/* mobile: stacked table cards */
+@media (max-width:640px){
+  table.report{min-width:0;}
+  table.report thead{display:none;}
+  table.report tr{
+    display:block;background:var(--fill);border-radius:14px;
+    padding:4px 14px;margin-bottom:10px;
+  }
+  table.report tbody tr:last-child{margin-bottom:0;}
+  table.report td{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    text-align:right;border-bottom:1px solid var(--sep);padding:9px 0;min-width:0;
+  }
+  table.report td::before{
+    content:attr(data-label);
+    font-size:11.5px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--text-2);text-align:left;flex:0 0 auto;
+  }
+  table.report td:first-child{justify-content:flex-start;font-weight:750;font-size:15px;border-bottom:1px solid var(--sep);}
+  table.report td:first-child::before{content:none;}
+  table.report tfoot td{border-top:0;}
+  table.report tfoot tr{background:var(--tint-con);}
+}
+
+/* ---------- Honor / status box ---------- */
+.honor-box{
+  margin-top:14px;background:var(--fill);border-radius:14px;
+  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.honor-box .hb-lbl{font-size:13.5px;font-weight:700;}
+.honor-box .hb-val{font-size:14.5px;font-weight:800;color:var(--blue-deep);text-align:right;}
+
+/* ---------- Goal planner ---------- */
+.goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 14px;margin-top:14px;}
+.goal-output{margin-top:16px;}
+.goal-panel{border-radius:var(--r);padding:16px;}
+.goal-panel .gp-kicker{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.75;}
+.goal-panel .gp-big{font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:4px 0 2px;font-variant-numeric:tabular-nums;}
+.goal-panel .gp-big small{font-size:16px;font-weight:700;opacity:.65;}
+.goal-panel p{font-size:13.5px;font-weight:550;line-height:1.5;}
+.goal-win{background:var(--tint-adv);color:var(--green-deep);}
+.goal-possible{background:var(--tint-con);color:var(--blue-deep);}
+.goal-reach{background:var(--tint-eme);color:var(--red-deep);}
+.goal-empty{background:var(--tint-none);color:var(--text-2);}
+
+/* ---------- Legend ---------- */
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:10px;}
+.legend-chip{border-radius:var(--r);padding:13px 14px;min-width:0;}
+.legend-chip .lc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.legend-chip .lc-name{font-size:14px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:7px;}
+.legend-chip .lc-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto;}
+.legend-chip .lc-range{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;opacity:.8;white-space:nowrap;}
+.legend-chip .lc-desc{font-size:12.5px;font-weight:550;opacity:.85;line-height:1.45;}
+.lc-adv{background:var(--tint-adv);color:var(--green-deep);}
+.lc-con{background:var(--tint-con);color:var(--blue-deep);}
+.lc-dev{background:var(--tint-dev);color:var(--orange-deep);}
+.lc-eme{background:var(--tint-eme);color:var(--red-deep);}
+
+/* ---------- Access log ---------- */
+.privacy-note{
+  display:flex;gap:10px;align-items:flex-start;
+  background:var(--tint-con);color:var(--blue-deep);
+  border-radius:var(--r);padding:12px 14px;margin-bottom:14px;
+}
+.privacy-note svg{flex:0 0 auto;margin-top:1px;}
+.privacy-note p{font-size:13px;font-weight:550;line-height:1.5;}
+.log-actions{display:flex;gap:8px;flex-wrap:wrap;}
+table.log{width:100%;min-width:860px;border-collapse:collapse;}
+table.log th{
+  font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-2);padding:8px 10px;border-bottom:1px solid var(--sep);
+  text-align:left;white-space:nowrap;
+}
+table.log td{padding:10px;border-bottom:1px solid var(--sep);font-size:13px;font-weight:600;vertical-align:middle;}
+table.log tbody tr:last-child td{border-bottom:0;}
+.visible-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--fill-2);color:var(--text);
+  padding:5px 10px;border-radius:999px;
+  font-size:12px;font-weight:700;white-space:nowrap;max-width:100%;
+}
+.visible-badge.time{background:var(--tint-con);color:var(--blue-deep);font-variant-numeric:tabular-nums;}
+.blurred-field{
+  display:inline-block;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  filter:blur(5px);user-select:none;-webkit-user-select:none;
+}
+.log-empty{padding:26px 12px;text-align:center;color:var(--text-2);font-size:13.5px;font-weight:550;}
+
+/* ---------- GAS box ---------- */
+.gas-box{margin-top:16px;background:var(--fill);border-radius:var(--r);padding:14px 16px;}
+.gas-box .gas-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:9px;}
+.gas-box .gas-top strong{font-size:13.5px;font-weight:750;}
+.gas-box .gas-top span{font-size:12px;font-weight:550;color:var(--text-2);}
+.gas-code{
+  background:#1C1C1E;color:#E5E5EA;border-radius:11px;padding:13px 15px;
+  font-family:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre;-webkit-overflow-scrolling:touch;
+}
+
+/* ---------- Footer & toast ---------- */
+.foot{padding:20px 4px 8px;text-align:center;color:var(--text-3);font-size:12px;font-weight:550;line-height:1.6;}
+.toast{
+  position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));z-index:99;
+  transform:translate(-50%,16px);
+  background:rgba(28,28,30,.92);color:#fff;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  padding:11px 20px;border-radius:999px;
+  font-size:13.5px;font-weight:650;letter-spacing:-.01em;
+  max-width:calc(100vw - 40px);text-align:center;
+  opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .22s ease,transform .22s ease,visibility .22s;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);visibility:visible;}
+
+/* ---------- Phone tuning ---------- */
+@media (max-width:640px){
+  body{font-size:14.5px;}
+  .page{padding:16px 12px calc(24px + env(safe-area-inset-bottom));}
+  .card{padding:15px;border-radius:16px;}
+  .field input,.field select{font-size:16px;}   /* prevents iOS focus zoom */
+  .item-hps-input,.item-score-input{font-size:16px;}
+  .weight-field input{font-size:16px;}
+  .abtn .abtn-label{display:none;}
+  .abtn{padding:0;width:36px;}
+  .appbar-badge{display:none;}
+  .seg-btn{min-width:96px;flex-basis:calc(50% - 4px);}
+  .rb-val.big{font-size:34px;}
+  .rb-badge-wrap{margin-left:0;width:100%;}
+  .rb-badge-wrap .level-badge{width:100%;justify-content:center;}
+  .blurred-field{max-width:150px;}
+  .result-banner{gap:10px 18px;padding:15px;}
+}
+@media (max-width:380px){
+  .item-row-header .h-act{display:none;}
+  .item-row-header .h-hps,.item-row-header .h-score{flex-basis:64px;width:64px;}
+  .item-hps-input,.item-score-input{flex-basis:64px;width:64px;}
+  .item-share{flex-basis:64px;}
+  .subject-pill .pill-name{max-width:130px;}
+}
+/* ---------- Tablet tuning ---------- */
+@media (min-width:641px) and (max-width:1023px){
+  .seg-btn{flex-basis:calc(33.3% - 4px);min-width:130px;}
+}
+/* ---------- Print ---------- */
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .appbar,.no-print,.toast,.add-row,.btn-del,.item-row-header .h-act{display:none !important;}
+  body{background:#fff;}
+  .page{max-width:100%;padding:0;}
+  .card,.assess-card,.result-banner{box-shadow:none;border:1px solid #d9d9de;break-inside:avoid;}
+  .items-list{background:#f2f2f5;}
+  .item-row{border:1px solid #e4e4e9;}
+  .seg{background:transparent;gap:6px;}
+  .seg-btn.active{border:1.5px solid #007AFF;}
 }
 </style>
 </head>
 <body>
 
-<div class="app-container">
-  <!-- Top App Header -->
-  <header class="app-header">
-    <div class="header-top">
-      <div class="brand-wrapper">
-        <div class="brand-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            <path d="M9 7h6"></path>
-            <path d="M9 11h6"></path>
-          </svg>
-        </div>
-        <div>
-          <h1 class="brand-title">3-Term Grade Calculator <span class="brand-badge">DepEd Portal</span></h1>
-          <p class="brand-sub">Learner & Parent Grade Assistant · Emerging to Advancing Scale · DO 8 & 15 Compliant</p>
-        </div>
+<!-- ================= iOS APP BAR ================= -->
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="appbar-brand">
+      <div class="appbar-logo">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          <path d="M9 7h6"></path><path d="M9 11h6"></path>
+        </svg>
       </div>
-      <div class="header-actions">
-        <button class="btn btn-light btn-sm" onclick="saveToDevice()" title="Save all data to this device">💾 Save</button>
-        <button class="btn btn-outline btn-sm" onclick="exportDataJSON()" title="Export JSON backup">⬇ Export</button>
-        <button class="btn btn-outline btn-sm" onclick="importDataJSON()" title="Import JSON backup">⬆ Import</button>
-        <button class="btn btn-outline btn-sm" onclick="window.print()" title="Print Progress Report">🖨 Print</button>
-        <button class="btn btn-outline btn-sm" onclick="resetCurrentStudent()" title="Clear and start new">↺ New</button>
-      </div>
+      <span class="appbar-title">3-Term Grade Calculator</span>
+      <span class="appbar-badge">DepEd Portal</span>
     </div>
-
-    <!-- Student & Class Metadata -->
-    <div class="profile-bar">
-      <div class="profile-field">
-        <label for="prof-name">Learner / Student Name</label>
-        <input type="text" id="prof-name" placeholder="e.g. Batumbakal, Maria S." oninput="onProfileChange()">
-      </div>
-      <div class="profile-field">
-        <label for="prof-grade">Grade Level</label>
-        <select id="prof-grade" onchange="onGradeChange()">
-          <option value="1">Grade 1 (MATATAG)</option>
-          <option value="2">Grade 2</option>
-          <option value="3">Grade 3</option>
-          <option value="4">Grade 4</option>
-          <option value="5">Grade 5</option>
-          <option value="6">Grade 6</option>
-          <option value="7" selected>Grade 7</option>
-          <option value="8">Grade 8</option>
-          <option value="9">Grade 9</option>
-          <option value="10">Grade 10</option>
-          <option value="11">Grade 11 (SHS)</option>
-          <option value="12">Grade 12 (SHS)</option>
-        </select>
-      </div>
-      <div class="profile-field">
-        <label for="prof-sec">Section</label>
-        <input type="text" id="prof-sec" placeholder="e.g. Diamond" oninput="onProfileChange()">
-      </div>
-      <div class="profile-field">
-        <label for="prof-school">School Name</label>
-        <input type="text" id="prof-school" placeholder="e.g. Naga City Science High School" oninput="onProfileChange()">
-      </div>
-    </div>
-  </header>
-
-  <!-- Subject Selector Bar -->
-  <div class="subject-nav">
-    <div class="subject-pills" id="subject-pills">
-      <!-- Injected via JS -->
-    </div>
-    <div style="display: flex; gap: 8px; flex-shrink: 0;">
-      <button class="btn btn-primary btn-sm" onclick="promptAddSubject()">＋ Add Subject</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteCurrentSubject()" title="Delete active subject">🗑 Remove</button>
+    <div class="appbar-actions">
+      <button class="abtn primary" onclick="saveToDevice()" title="Save to this device" aria-label="Save">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 10.5 4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="abtn-label">Save</span>
+      </button>
+      <button class="abtn" onclick="exportDataJSON()" title="Export JSON backup" aria-label="Export backup">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3"/><path d="m8 6.5 4-4 4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="abtn-label">Export</span>
+      </button>
+      <button class="abtn" onclick="importDataJSON()" title="Import JSON backup" aria-label="Import backup">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 10.5 4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="abtn-label">Import</span>
+      </button>
+      <button class="abtn" onclick="window.print()" title="Print / Save as PDF" aria-label="Print">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+        <span class="abtn-label">Print</span>
+      </button>
+      <button class="abtn" onclick="resetCurrentStudent()" title="Clear and start a new record" aria-label="New record">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>
+        <span class="abtn-label">New</span>
+      </button>
     </div>
   </div>
+</header>
 
-  <!-- Main View Tabs -->
-  <nav class="tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('term1')" id="tab-btn-term1">
-      📘 Term 1 <span class="tab-badge" id="tab-badge-term1">—</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('term2')" id="tab-btn-term2">
-      📗 Term 2 <span class="tab-badge" id="tab-badge-term2">—</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('term3')" id="tab-btn-term3">
-      📙 Term 3 <span class="tab-badge" id="tab-badge-term3">—</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('summary')" id="tab-btn-summary">
-      📊 3-Term Summary & Report Card <span class="tab-badge" id="tab-badge-summary">—</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('goal')" id="tab-btn-goal">
-      🎯 Target Grade Goal Planner
-    </button>
-  </nav>
-
-  <!-- ========================================================================
-       TERM 1 / 2 / 3 TEMPLATE VIEW
-       ======================================================================== -->
-  <div id="term-view-container">
-    <!-- Active term view will be rendered dynamically here -->
+<main class="page">
+  <div class="title-block">
+    <h1>3-Term Grade Calculator</h1>
+    <p>Learner &amp; parent grade assistant · Emerging to Advancing scale · DepEd DO 8 &amp; DO 15 compliant</p>
   </div>
 
-  <!-- ========================================================================
-       3-TERM SUMMARY & GENERAL AVERAGE REPORT CARD TAB
-       ======================================================================== -->
-  <div id="tab-content-summary" class="tab-content">
-    <div class="report-card-wrap">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+  <div class="stack">
+
+    <!-- ================= PROFILE ================= -->
+    <section class="card">
+      <div class="card-head">
         <div>
-          <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">Learner Progress Report Card (3-Term Summary)</h2>
-          <p style="font-size: 0.84rem; color: var(--text-muted);">Consolidated Grades Across All Learning Areas and General Average</p>
+          <h2>Learner Profile</h2>
+          <div class="sub">Saved automatically on this device only — nothing is uploaded.</div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print / Export PDF</button>
       </div>
-
-      <table class="report-table" id="all-subjects-table">
-        <thead>
-          <tr>
-            <th style="text-align: left; width: 34%;">Learning Area / Subject</th>
-            <th style="width: 12%;">Term 1</th>
-            <th style="width: 12%;">Term 2</th>
-            <th style="width: 12%;">Term 3</th>
-            <th style="width: 14%;">Final Grade</th>
-            <th style="width: 16%;">Performance Level</th>
-          </tr>
-        </thead>
-        <tbody id="all-subjects-tbody">
-          <!-- Injected via JS -->
-        </tbody>
-        <tfoot>
-          <tr class="gen-avg-row">
-            <td style="text-align: left;">GENERAL AVERAGE</td>
-            <td id="gen-avg-t1">—</td>
-            <td id="gen-avg-t2">—</td>
-            <td id="gen-avg-t3">—</td>
-            <td id="gen-avg-final" style="color: var(--primary); font-weight: 900;">—</td>
-            <td id="gen-avg-desc">—</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <!-- Honor Roll & Status Box -->
-      <div id="honor-roll-box" style="margin-top: 18px; padding: 14px 18px; border-radius: 10px; background: #f8fafc; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span style="font-size: 0.9rem; font-weight: 800;">Academic Performance & Promotion Status:</span>
-        <span id="honor-status-badge" style="font-size: 1rem; font-weight: 800; color: var(--primary);">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       WHAT-IF / GRADE GOAL PLANNER TAB
-       ======================================================================== -->
-  <div id="tab-content-goal" class="tab-content">
-    <div class="goal-card">
-      <div class="goal-form">
-        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--primary);">🎯 Target Grade Goal Planner ("What-If")</h3>
-        <p style="font-size: 0.84rem; color: var(--text-muted);">
-          Find out exactly what score you need on your upcoming Written Work, Performance Task, or Exam to reach your desired target grade!
-        </p>
-
-        <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 5px;">TARGET TERM GRADE</label>
-          <select id="goal-target-grade" style="width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700;" onchange="calculateGoal()">
-            <option value="95">95 · With High Honors (Advancing)</option>
-            <option value="90" selected>90 · With Honors (Advancing)</option>
-            <option value="85">85 · Connecting (Proficient)</option>
-            <option value="80">80 · Developing (Satisfactory)</option>
-            <option value="75">75 · Developing (Passing Baseline)</option>
+      <div class="profile-grid">
+        <div class="field">
+          <label class="mini-label" for="prof-name">Learner Name</label>
+          <input type="text" id="prof-name" placeholder="Enter learner name" autocomplete="off" oninput="onProfileChange()">
+        </div>
+        <div class="field">
+          <label class="mini-label" for="prof-grade">Grade Level</label>
+          <select id="prof-grade" onchange="onGradeChange()">
+            <option value="1">Grade 1 (MATATAG)</option>
+            <option value="2">Grade 2</option>
+            <option value="3">Grade 3</option>
+            <option value="4">Grade 4</option>
+            <option value="5">Grade 5</option>
+            <option value="6">Grade 6</option>
+            <option value="7" selected>Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11 (SHS)</option>
+            <option value="12">Grade 12 (SHS)</option>
           </select>
         </div>
+        <div class="field">
+          <label class="mini-label" for="prof-sec">Section</label>
+          <input type="text" id="prof-sec" placeholder="Enter section" autocomplete="off" oninput="onProfileChange()">
+        </div>
+        <div class="field">
+          <label class="mini-label" for="prof-school">School Name</label>
+          <input type="text" id="prof-school" placeholder="Enter school name" autocomplete="off" oninput="onProfileChange()">
+        </div>
+      </div>
+    </section>
 
+    <!-- ================= SUBJECTS ================= -->
+    <section class="card">
+      <div class="card-head">
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 5px;">WHICH TERM?</label>
-          <select id="goal-term" style="width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700;" onchange="calculateGoal()">
-            <option value="term1">Term 1</option>
-            <option value="term2">Term 2</option>
-            <option value="term3">Term 3</option>
-          </select>
+          <h2>Learning Areas</h2>
+          <div class="sub">Tap a subject to encode its scores. Badges show the current final grade.</div>
         </div>
+        <div class="log-actions no-print">
+          <button class="btn btn-primary btn-sm" onclick="promptAddSubject()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add Subject
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCurrentSubject()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Remove
+          </button>
+        </div>
+      </div>
+      <div class="pills" id="subject-pills"></div>
+    </section>
 
+    <!-- ================= TABS ================= -->
+    <nav class="seg" id="tabs-bar" aria-label="Views">
+      <button class="seg-btn active" onclick="switchTab('term1')" id="tab-btn-term1">Term 1 <span class="seg-badge" id="tab-badge-term1">—</span></button>
+      <button class="seg-btn" onclick="switchTab('term2')" id="tab-btn-term2">Term 2 <span class="seg-badge" id="tab-badge-term2">—</span></button>
+      <button class="seg-btn" onclick="switchTab('term3')" id="tab-btn-term3">Term 3 <span class="seg-badge" id="tab-badge-term3">—</span></button>
+      <button class="seg-btn" onclick="switchTab('summary')" id="tab-btn-summary">Summary <span class="seg-badge" id="tab-badge-summary">—</span></button>
+      <button class="seg-btn" onclick="switchTab('goal')" id="tab-btn-goal">Goal Planner</button>
+    </nav>
+
+    <!-- ================= TERM VIEW (dynamic) ================= -->
+    <div id="term-view-container"></div>
+
+    <!-- ================= SUMMARY ================= -->
+    <div id="tab-content-summary" class="tab-content" style="display:none;">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Progress Report Card · 3-Term Summary</h2>
+            <div class="sub">Consolidated grades across all learning areas with the general average.</div>
+          </div>
+          <button class="btn btn-tonal btn-sm no-print" onclick="window.print()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            Print / PDF
+          </button>
+        </div>
+        <div class="table-scroll">
+          <table class="report" id="all-subjects-table">
+            <thead>
+              <tr>
+                <th style="width:30%;">Learning Area</th>
+                <th style="width:12%;">Term 1</th>
+                <th style="width:12%;">Term 2</th>
+                <th style="width:12%;">Term 3</th>
+                <th style="width:14%;">Final</th>
+                <th style="width:20%;">Performance Level</th>
+              </tr>
+            </thead>
+            <tbody id="all-subjects-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td data-label="">General Average</td>
+                <td data-label="Term 1" id="gen-avg-t1">—</td>
+                <td data-label="Term 2" id="gen-avg-t2">—</td>
+                <td data-label="Term 3" id="gen-avg-t3">—</td>
+                <td data-label="Final" id="gen-avg-final" class="gen-final">—</td>
+                <td data-label="Level" id="gen-avg-desc">—</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="honor-box">
+          <span class="hb-lbl">Academic Performance &amp; Promotion Status</span>
+          <span class="hb-val" id="honor-status-badge">—</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= GOAL PLANNER ================= -->
+    <div id="tab-content-goal" class="tab-content" style="display:none;">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Target Grade Goal Planner</h2>
+            <div class="sub">Find the exact score you need on an upcoming assessment to reach your target grade.</div>
+          </div>
+        </div>
+        <div class="goal-grid">
+          <div class="field">
+            <label class="mini-label" for="goal-target-grade">Target Term Grade</label>
+            <select id="goal-target-grade" onchange="calculateGoal()">
+              <option value="95">95 · With High Honors</option>
+              <option value="90" selected>90 · With Honors</option>
+              <option value="85">85 · Connecting</option>
+              <option value="80">80 · Developing</option>
+              <option value="75">75 · Passing Mark</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="mini-label" for="goal-term">Which Term?</label>
+            <select id="goal-term" onchange="calculateGoal()">
+              <option value="term1">Term 1</option>
+              <option value="term2">Term 2</option>
+              <option value="term3">Term 3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="mini-label" for="goal-target-comp">Upcoming Assessment</label>
+            <select id="goal-target-comp" onchange="calculateGoal()">
+              <option value="te">Term Examination (TE)</option>
+              <option value="st2">Summative Test 2 (ST2)</option>
+              <option value="st1">Summative Test 1 (ST1)</option>
+              <option value="pt">Next Performance Task</option>
+              <option value="ww">Next Written Work / Quiz</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="mini-label" for="goal-hps">Highest Possible Score (HPS)</label>
+            <input type="number" id="goal-hps" value="50" min="1" max="200" inputmode="numeric" oninput="calculateGoal()">
+          </div>
+        </div>
+        <div class="goal-output" id="goal-result-box"></div>
+      </section>
+    </div>
+
+    <!-- ================= LEGEND ================= -->
+    <section class="card">
+      <div class="card-head">
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 5px;">WHICH UPCOMING ASSESSMENT?</label>
-          <select id="goal-target-comp" style="width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700;" onchange="calculateGoal()">
-            <option value="te">Term Examination (TE)</option>
-            <option value="st2">Summative Test 2 (ST2)</option>
-            <option value="st1">Summative Test 1 (ST1)</option>
-            <option value="pt">Next Performance Task</option>
-            <option value="ww">Next Written Work / Quiz</option>
-          </select>
+          <h2>Performance Level Legend</h2>
+          <div class="sub">DepEd standard qualitative descriptors · Emerging to Advancing</div>
         </div>
+      </div>
+      <div class="legend-grid">
+        <div class="legend-chip lc-adv">
+          <div class="lc-top">
+            <span class="lc-name"><span class="lc-dot"></span>Advancing (A)</span>
+            <span class="lc-range">90 – 100</span>
+          </div>
+          <div class="lc-desc">Exceptional mastery of learning standards and competencies.</div>
+        </div>
+        <div class="legend-chip lc-con">
+          <div class="lc-top">
+            <span class="lc-name"><span class="lc-dot"></span>Connecting (C)</span>
+            <span class="lc-range">85 – 89</span>
+          </div>
+          <div class="lc-desc">Substantial understanding and consistent competency application.</div>
+        </div>
+        <div class="legend-chip lc-dev">
+          <div class="lc-top">
+            <span class="lc-name"><span class="lc-dot"></span>Developing (D)</span>
+            <span class="lc-range">75 – 84</span>
+          </div>
+          <div class="lc-desc">Foundational skills and essential competency requirements met.</div>
+        </div>
+        <div class="legend-chip lc-eme">
+          <div class="lc-top">
+            <span class="lc-name"><span class="lc-dot"></span>Emerging (E)</span>
+            <span class="lc-range">Below 75</span>
+          </div>
+          <div class="lc-desc">Requires targeted learning intervention and remediation.</div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ================= ACCESS LOG ================= -->
+    <section class="card">
+      <div class="card-head">
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 5px;">HIGHEST POSSIBLE SCORE (HPS)</label>
-          <input type="number" id="goal-hps" value="50" min="1" max="200" style="width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); font-weight: 800;" oninput="calculateGoal()">
+          <h2>Access &amp; Calculation Activity Log</h2>
+          <div class="sub">Recent records kept on this device for transparency.</div>
+        </div>
+        <div class="log-actions no-print">
+          <button class="btn btn-gray btn-sm" onclick="logCurrentSession(true)">＋ Log Current Record</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAccessLog()">Clear Logs</button>
         </div>
       </div>
 
-      <div class="goal-output" id="goal-result-box">
-        <!-- Rendered via JS -->
+      <div class="privacy-note">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <p><strong>Data privacy protection:</strong> only the timestamp and grade &amp; section are visible. Learner names, subjects, and score breakdowns stay blurred for student confidentiality.</p>
       </div>
-    </div>
-  </div>
 
-  <!-- ========================================================================
-       PERFORMANCE LEVEL LEGEND (EMERGING TO ADVANCING)
-       ======================================================================== -->
-  <div class="descriptor-legend-card">
-    <div class="legend-header">
-      <h4>📖 Performance Level Legend (DepEd Standard Scale)</h4>
-      <span>Qualitative Descriptors · Emerging to Advancing</span>
-    </div>
-    <div class="legend-grid">
-      <div class="legend-chip chip-adv">
-        <div class="chip-title">
-          <span>🌟 Advancing (A)</span>
-          <span class="chip-range">90 – 100</span>
+      <div class="table-scroll">
+        <table class="log log-table">
+          <thead>
+            <tr>
+              <th>Date &amp; Time</th>
+              <th>Grade &amp; Section</th>
+              <th>Learner Name</th>
+              <th>Term</th>
+              <th>Subject</th>
+              <th>Written Works</th>
+              <th>Performance Tasks</th>
+              <th>Summative Exam</th>
+              <th>Final Grade</th>
+            </tr>
+          </thead>
+          <tbody id="access-log-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="gas-box no-print">
+        <div class="gas-top">
+          <strong>Google Apps Script web app setup</strong>
+          <span>Paste into script.google.com</span>
         </div>
-        <div class="chip-desc">Exceptional mastery of learning standards and competencies.</div>
-      </div>
-      <div class="legend-chip chip-con">
-        <div class="chip-title">
-          <span>🚀 Connecting (C)</span>
-          <span class="chip-range">85 – 89</span>
-        </div>
-        <div class="chip-desc">Substantial understanding and consistent competency application.</div>
-      </div>
-      <div class="legend-chip chip-dev">
-        <div class="chip-title">
-          <span>🎯 Developing (D)</span>
-          <span class="chip-range">75 – 84</span>
-        </div>
-        <div class="chip-desc">Foundational skills and essential competency requirements met.</div>
-      </div>
-      <div class="legend-chip chip-eme">
-        <div class="chip-title">
-          <span>🌱 Emerging (E)</span>
-          <span class="chip-range">60 – 74</span>
-        </div>
-        <div class="chip-desc">Requires targeted learning intervention and remediation.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================
-       RECENT ACCESS & CALCULATION AUDIT LOG REPORT (PRIVACY BLURRED)
-       ======================================================================== -->
-  <div class="log-section-card">
-    <div class="log-header">
-      <div class="log-title-area">
-        <h3>📋 Recent Access & Calculation Activity Log</h3>
-      </div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-outline-dark btn-sm" onclick="logCurrentSession(true)">➕ Log Current Record</button>
-        <button class="btn btn-outline-dark btn-sm" onclick="clearAccessLog()">↺ Clear Logs</button>
-      </div>
-    </div>
-
-    <!-- Data Privacy Banner -->
-    <div class="log-privacy-notice">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-      <span>
-        <strong>DepEd Data Privacy Protection:</strong> Only the <em>Access Timestamp</em> and <em>Grade & Section</em> are publicly visible. Sensitive individual learner names, subjects, and grade score breakdowns are blurred for student confidentiality.
-      </span>
-    </div>
-
-    <div class="log-table-wrap">
-      <table class="log-table">
-        <thead>
-          <tr>
-            <th>Date & Time of Access</th>
-            <th>Grade & Section</th>
-            <th>Learner Name (Protected)</th>
-            <th>Term</th>
-            <th>Subject</th>
-            <th>Written Works (WS / 100)</th>
-            <th>Performance Tasks (WS / 100)</th>
-            <th>Summative Exam (WS / 100)</th>
-            <th>Final Grade</th>
-          </tr>
-        </thead>
-        <tbody id="access-log-tbody">
-          <!-- Populated dynamically via JS -->
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Google Apps Script Deployment Instructions Box -->
-    <div class="gas-box">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <strong>⚡ Google Apps Script (GAS) Web App Setup Guide</strong>
-        <span style="font-size:0.75rem; color:var(--text-muted);">Paste into script.google.com</span>
-      </div>
-      <div class="gas-code-preview">
-// In Google Apps Script (Code.gs):
-function doGet(e) {
+        <div class="gas-code" id="gas-code">function doGet(e) {
   return HtmlService.createHtmlOutputFromFile('Index')
     .setTitle('3-Term Grade Calculator · DepEd')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
-}
+}</div>
       </div>
-    </div>
+    </section>
+
+    <footer class="foot">
+      3-Term Grade Calculator · Flat iOS Edition · Build 20260923<br>
+      Works 100% offline · Your data never leaves this device
+    </footer>
   </div>
+</main>
 
-</div>
-
-<div id="toast" class="toast-msg"></div>
-
-<!-- Hidden File Input for Import -->
-<input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="handleFileImport(event)">
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<input type="file" id="import-file-input" accept=".json" style="display:none" onchange="handleFileImport(event)">
 
 <script>
 /* ==========================================================================
-   3-TERM GRADE CALCULATOR JAVASCRIPT ENGINE
+   3-TERM GRADE CALCULATOR — ENGINE
    ========================================================================== */
 "use strict";
 
@@ -1381,16 +845,30 @@ function minInitialForTransmuted(tg) {
   return 0;
 }
 
-/* Emerging to Advancing Performance Descriptors */
+/* Emerging-to-Advancing descriptors (iOS palette) */
+var DESC = {
+  adv: { title: "Advancing",  code: "A", range: "90–100",  cls: "lv-adv", fg: "#248A3D", tint: "rgba(52,199,89,.14)"  },
+  con: { title: "Connecting", code: "C", range: "85–89",   cls: "lv-con", fg: "#0062CC", tint: "rgba(0,122,255,.12)"  },
+  dev: { title: "Developing", code: "D", range: "75–84",   cls: "lv-dev", fg: "#B25B00", tint: "rgba(255,149,0,.16)"  },
+  eme: { title: "Emerging",   code: "E", range: "Below 75", cls: "lv-eme", fg: "#D70015", tint: "rgba(255,59,48,.12)" },
+  none:{ title: "Not started", code: "—", range: "—",      cls: "lv-none", fg: "#8E8E93", tint: "rgba(120,120,128,.12)" }
+};
+
 function getDescriptor(g) {
-  g = parseFloat(g) || 0;
-  if (g >= 90) return { title: "Advancing (A)", short: "Advancing", code: "A", range: "90–100", cls: "chip-adv", badgeCls: "badge-adv", icon: "🌟" };
-  if (g >= 85) return { title: "Connecting (C)", short: "Connecting", code: "C", range: "85–89", cls: "chip-con", badgeCls: "badge-con", icon: "🚀" };
-  if (g >= 75) return { title: "Developing (D)", short: "Developing", code: "D", range: "75–84", cls: "chip-dev", badgeCls: "badge-dev", icon: "🎯" };
-  return { title: "Emerging (E)", short: "Emerging", code: "E", range: "Below 75", cls: "chip-eme", badgeCls: "badge-eme", icon: "🌱" };
+  g = parseFloat(g);
+  if (isNaN(g)) return DESC.none;
+  if (g >= 90) return DESC.adv;
+  if (g >= 85) return DESC.con;
+  if (g >= 75) return DESC.dev;
+  return DESC.eme;
 }
 
-/* Default Subjects List by Grade Level */
+function levelBadgeHtml(d, small) {
+  return '<span class="level-badge ' + d.cls + '"' + (small ? ' style="font-size:12px;padding:5px 11px;"' : '') +
+         '><span class="lb-dot"></span>' + d.title + (d.code !== "—" ? " (" + d.code + ")" : "") + "</span>";
+}
+
+/* Default learning areas per grade level (templates only — no scores) */
 var DEFAULT_SUBJECTS = {
   standard: ["English", "Mathematics", "Science", "Filipino", "Araling Panlipunan (AP)", "Values Education (VE)", "MAPEH", "TLE"],
   g1: ["Reading & Literacy", "Language", "Mathematics", "GMRC", "Makabansa"],
@@ -1398,59 +876,56 @@ var DEFAULT_SUBJECTS = {
   g4_6: ["Filipino", "English", "Mathematics", "Science", "Araling Panlipunan (AP)", "GMRC", "EPP", "MAPEH"]
 };
 
-/* Application State */
+/* Blank application state — no demo data */
 var appState = {
-  profile: {
-    name: "Batumbakal, Maria S.",
-    grade: "7",
-    section: "Diamond",
-    school: "Naga City Science High School"
-  },
-  activeSubject: "Mathematics",
+  profile: { name: "", grade: "7", section: "", school: "" },
+  activeSubject: null,
   activeTab: "term1",
   subjects: {}
 };
 
+/* A fresh subject starts completely empty: no items, all exam scores 0 */
 function defaultTermAssess(subjName) {
-  var isPractical = /EPP|TLE|MAPEH|MUSIC|ARTS|PE|HEALTH/i.test(subjName || '');
+  var isPractical = /EPP|TLE|MAPEH|MUSIC|ARTS|PE|HEALTH/i.test(subjName || "");
   return {
-    weights: {
-      ww: 20,
-      pt: isPractical ? 60 : 50,
-      ex: isPractical ? 20 : 30
-    },
-    wwItems: [
-      { name: "Written Work 1", hps: 20, score: 18 },
-      { name: "Written Work 2", hps: 25, score: 23 },
-      { name: "Written Work 3", hps: 20, score: 19 }
-    ],
-    ptItems: [
-      { name: "Performance Task 1", hps: 30, score: 28 },
-      { name: "Performance Task 2", hps: 40, score: 38 }
-    ],
+    weights: { ww: 20, pt: isPractical ? 60 : 50, ex: isPractical ? 20 : 30 },
+    wwItems: [],
+    ptItems: [],
     exams: {
-      st1: { name: "Summative Test 1", hps: 25, score: 23 },
-      st2: { name: "Summative Test 2", hps: 25, score: 22 },
-      te: { name: "Term Examination", hps: 50, score: 46 }
+      st1: { name: "Summative Test 1", hps: 25, score: 0 },
+      st2: { name: "Summative Test 2", hps: 25, score: 0 },
+      te:  { name: "Term Examination", hps: 50, score: 0 }
     }
   };
 }
 
 function createDefaultSubject(name) {
-  return {
-    name: name,
-    term1: defaultTermAssess(name),
-    term2: defaultTermAssess(name),
-    term3: defaultTermAssess(name)
-  };
+  return { name: name, term1: defaultTermAssess(name), term2: defaultTermAssess(name), term3: defaultTermAssess(name) };
 }
 
-/* Scoped Storage Key */
+/* A term counts as "started" only when real scores exist */
+function termHasData(a) {
+  if (!a) return false;
+  if ((a.wwItems && a.wwItems.length > 0) || (a.ptItems && a.ptItems.length > 0)) return true;
+  var ex = a.exams || {};
+  return ["st1", "st2", "te"].some(function (k) {
+    return ex[k] && (parseFloat(ex[k].score) || 0) > 0;
+  });
+}
+
+/* ---------- Storage (device-local, scoped per learner) ---------- */
 function getStorageKey() {
   var n = (appState.profile.name || "default").trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
   var s = (appState.profile.section || "default").trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
   var g = (appState.profile.grade || "7").trim();
   return "gradecalc_v2_" + g + "_" + s + "_" + n;
+}
+
+function stripLegacyDemoProfile() {
+  var p = appState.profile;
+  if (p.name === "Batumbakal, Maria S.") p.name = "";
+  if (p.section === "Diamond" && !p.name) p.section = "";
+  if (p.school === "Naga City Science High School" && !p.name) p.school = "";
 }
 
 function loadFromStorage() {
@@ -1460,18 +935,17 @@ function loadFromStorage() {
       var saved = JSON.parse(raw);
       if (saved && saved.profile) appState.profile = saved.profile;
     }
-    var key = getStorageKey();
-    var dataRaw = localStorage.getItem(key);
+    stripLegacyDemoProfile();
+    var dataRaw = localStorage.getItem(getStorageKey());
     if (dataRaw) {
       var data = JSON.parse(dataRaw);
       if (data && data.subjects) {
         appState.subjects = data.subjects;
-        appState.activeSubject = data.activeSubject || Object.keys(data.subjects)[0] || "Mathematics";
+        appState.activeSubject = data.activeSubject || Object.keys(data.subjects)[0] || null;
         return;
       }
     }
   } catch (e) { console.warn("Load storage error:", e); }
-
   initDefaultSubjects();
 }
 
@@ -1482,50 +956,55 @@ function initDefaultSubjects() {
   if (g === 1) list = DEFAULT_SUBJECTS.g1;
   else if (g === 2 || g === 3) list = DEFAULT_SUBJECTS.g2_3;
   else if (g >= 4 && g <= 6) list = DEFAULT_SUBJECTS.g4_6;
-
-  list.forEach(function(sub) {
-    appState.subjects[sub] = createDefaultSubject(sub);
-  });
+  for (var i = 0; i < list.length; i++) appState.subjects[list[i]] = createDefaultSubject(list[i]);
   appState.activeSubject = list[0];
 }
 
-function saveToDevice(showMsg) {
+var _saveTimer = null;
+function queueSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(function () { saveToDevice(false, false); }, 400);
+}
+
+/* showMsg: toast? doLog: write an activity-log entry? (typing saves stay silent) */
+function saveToDevice(showMsg, doLog) {
   try {
-    var key = getStorageKey();
-    localStorage.setItem(key, JSON.stringify({
+    localStorage.setItem(getStorageKey(), JSON.stringify({
       profile: appState.profile,
       activeSubject: appState.activeSubject,
       subjects: appState.subjects
     }));
     localStorage.setItem("gradecalc_last_profile", JSON.stringify({ profile: appState.profile }));
-    if (showMsg !== false) showToast("All grades and calculations saved!");
-    logCurrentSession(false);
+    if (showMsg !== false) showToast("All grades saved to this device");
+    if (doLog !== false) logCurrentSession(false);
   } catch (e) {
     showToast("Storage error: " + e.message);
   }
 }
 
+var _toastTimer = null;
 function showToast(msg) {
   var t = document.getElementById("toast");
   if (!t) return;
   t.textContent = msg;
-  t.style.display = "block";
-  clearTimeout(t._timer);
-  t._timer = setTimeout(function() { t.style.display = "none"; }, 3000);
+  t.classList.add("show");
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
 }
 
+/* ---------- Profile handlers ---------- */
 function onProfileChange() {
   appState.profile.name = document.getElementById("prof-name").value;
   appState.profile.section = document.getElementById("prof-sec").value;
   appState.profile.school = document.getElementById("prof-school").value;
-  saveToDevice(false);
+  queueSave();
 }
 
 function onGradeChange() {
   var oldG = appState.profile.grade;
   var newG = document.getElementById("prof-grade").value;
   appState.profile.grade = newG;
-  if (confirm("Switching to Grade " + newG + " will load standard subjects for this grade level. Continue?")) {
+  if (confirm("Switch to Grade " + newG + " learning areas? Your current subject list will be replaced by the standard set for this grade (scores saved under other learners are kept).")) {
     initDefaultSubjects();
     renderAll();
     saveToDevice(true);
@@ -1536,28 +1015,27 @@ function onGradeChange() {
 }
 
 function resetCurrentStudent() {
-  if (confirm("Clear all data and start a new student calculation?")) {
+  if (confirm("Clear all scores and start a fresh record for this learner?")) {
     appState.profile.name = "";
     appState.profile.section = "";
     document.getElementById("prof-name").value = "";
     document.getElementById("prof-sec").value = "";
     initDefaultSubjects();
     renderAll();
-    saveToDevice(false);
+    saveToDevice(false, false);
+    showToast("Ready for a new record");
   }
 }
 
 /* ==========================================================================
-   CALCULATION LOGIC
+   CALCULATIONS
    ========================================================================== */
 function calculateComponent(items) {
   var totalRaw = 0, totalHps = 0;
   if (!items || !items.length) return { raw: 0, hps: 0, ps: 0 };
-  items.forEach(function(it) {
-    var s = parseFloat(it.score) || 0;
-    var h = Math.max(1, parseFloat(it.hps) || 1);
-    totalRaw += s;
-    totalHps += h;
+  items.forEach(function (it) {
+    totalRaw += parseFloat(it.score) || 0;
+    totalHps += Math.max(1, parseFloat(it.hps) || 1);
   });
   var ps = totalHps > 0 ? (totalRaw / totalHps) * 100 : 0;
   return { raw: totalRaw, hps: totalHps, ps: ps };
@@ -1567,26 +1045,18 @@ function calculateExams(exams, exWeight) {
   var st1 = exams.st1 || { hps: 25, score: 0 };
   var st2 = exams.st2 || { hps: 25, score: 0 };
   var te = exams.te || { hps: 50, score: 0 };
-
-  var st1_ps = (st1.hps > 0) ? (st1.score / st1.hps) * 100 : 0;
-  var st2_ps = (st2.hps > 0) ? (st2.score / st2.hps) * 100 : 0;
-  var te_ps = (te.hps > 0) ? (te.score / te.hps) * 100 : 0;
-
-  var ex_ps = (st1_ps * 0.30) + (st2_ps * 0.30) + (te_ps * 0.40);
-
-  var st1_ws = st1_ps * (exWeight * 0.30) / 100;
-  var st2_ws = st2_ps * (exWeight * 0.30) / 100;
-  var te_ws = te_ps * (exWeight * 0.40) / 100;
-  var ex_ws = ex_ps * (exWeight / 100);
-
+  var st1_ps = st1.hps > 0 ? (st1.score / st1.hps) * 100 : 0;
+  var st2_ps = st2.hps > 0 ? (st2.score / st2.hps) * 100 : 0;
+  var te_ps = te.hps > 0 ? (te.score / te.hps) * 100 : 0;
+  var ex_ps = st1_ps * 0.30 + st2_ps * 0.30 + te_ps * 0.40;
   return {
-    st1: { ps: st1_ps, ws: st1_ws },
-    st2: { ps: st2_ps, ws: st2_ws },
-    te: { ps: te_ps, ws: te_ws },
+    st1: { ps: st1_ps, ws: st1_ps * (exWeight * 0.30) / 100 },
+    st2: { ps: st2_ps, ws: st2_ps * (exWeight * 0.30) / 100 },
+    te:  { ps: te_ps,  ws: te_ps  * (exWeight * 0.40) / 100 },
     totalRaw: (parseFloat(st1.score) || 0) + (parseFloat(st2.score) || 0) + (parseFloat(te.score) || 0),
     totalHps: (parseFloat(st1.hps) || 0) + (parseFloat(st2.hps) || 0) + (parseFloat(te.hps) || 0),
     ps: ex_ps,
-    ws: ex_ws
+    ws: ex_ps * (exWeight / 100)
   };
 }
 
@@ -1594,66 +1064,53 @@ function calculateTerm(assess) {
   var ww = calculateComponent(assess.wwItems);
   var pt = calculateComponent(assess.ptItems);
   var ex = calculateExams(assess.exams, assess.weights.ex);
-
   var ww_ws = ww.ps * (assess.weights.ww / 100);
   var pt_ws = pt.ps * (assess.weights.pt / 100);
-  var ex_ws = ex.ws;
-
-  var initialGrade = ww_ws + pt_ws + ex_ws;
+  var initialGrade = ww_ws + pt_ws + ex.ws;
   var transmutedGrade = transmute(initialGrade);
-  var desc = getDescriptor(transmutedGrade);
-
   return {
     ww: { raw: ww.raw, hps: ww.hps, ps: ww.ps, ws: ww_ws },
     pt: { raw: pt.raw, hps: pt.hps, ps: pt.ps, ws: pt_ws },
     ex: ex,
     initialGrade: Math.round(initialGrade * 100) / 100,
     transmutedGrade: transmutedGrade,
-    descriptor: desc,
+    descriptor: getDescriptor(transmutedGrade),
     passed: transmutedGrade >= 75
   };
 }
 
+/* Final grade = average of started terms only; null when nothing is encoded */
 function calculateSubjectFinal(subj) {
-  var t1 = calculateTerm(subj.term1).transmutedGrade;
-  var t2 = calculateTerm(subj.term2).transmutedGrade;
-  var t3 = calculateTerm(subj.term3).transmutedGrade;
-
-  var fg = Math.round(t1 * 0.3333 + t2 * 0.3333 + t3 * 0.3334);
-  var desc = getDescriptor(fg);
-
-  return {
-    t1: t1,
-    t2: t2,
-    t3: t3,
-    finalGrade: fg,
-    descriptor: desc,
-    passed: fg >= 75
-  };
+  function tg(t) { return termHasData(subj[t]) ? calculateTerm(subj[t]).transmutedGrade : null; }
+  var t1 = tg("term1"), t2 = tg("term2"), t3 = tg("term3");
+  var vals = [t1, t2, t3].filter(function (v) { return v !== null; });
+  var fg = vals.length ? Math.round(vals.reduce(function (a, b) { return a + b; }, 0) / vals.length) : null;
+  return { t1: t1, t2: t2, t3: t3, finalGrade: fg, descriptor: getDescriptor(fg), passed: fg !== null && fg >= 75 };
 }
 
 /* ==========================================================================
-   UI RENDERING
+   RENDERING
    ========================================================================== */
 function renderSubjectNav() {
   var nav = document.getElementById("subject-pills");
   if (!nav) return;
-  var html = "";
   var keys = Object.keys(appState.subjects);
   if (!keys.length) {
     appState.subjects["Mathematics"] = createDefaultSubject("Mathematics");
     keys = ["Mathematics"];
     appState.activeSubject = "Mathematics";
   }
+  if (!appState.subjects[appState.activeSubject]) appState.activeSubject = keys[0];
 
-  keys.forEach(function(sub) {
-    var sObj = appState.subjects[sub];
-    var fin = calculateSubjectFinal(sObj);
-    var activeCls = (sub === appState.activeSubject) ? " active" : "";
-    html += '<div class="subject-pill' + activeCls + '" onclick="selectSubject(\'' + escapeHtml(sub) + '\')">' +
-            '<span>' + escapeHtml(sub) + '</span>' +
-            '<span class="pill-grade">' + fin.finalGrade + '</span>' +
-            '</div>';
+  var html = "";
+  keys.forEach(function (sub) {
+    var fin = calculateSubjectFinal(appState.subjects[sub]);
+    var activeCls = sub === appState.activeSubject ? " active" : "";
+    var badge = fin.finalGrade === null
+      ? '<span class="pill-grade">New</span>'
+      : '<span class="pill-grade">' + fin.finalGrade + "</span>";
+    html += '<button type="button" class="subject-pill' + activeCls + '" onclick="selectSubject(\'' + escapeHtml(sub) + '\')">' +
+            '<span class="pill-name">' + escapeHtml(sub) + "</span>" + badge + "</button>";
   });
   nav.innerHTML = html;
 }
@@ -1661,15 +1118,16 @@ function renderSubjectNav() {
 function selectSubject(sub) {
   if (!appState.subjects[sub]) return;
   appState.activeSubject = sub;
+  saveToDevice(false, false);
   renderAll();
 }
 
 function promptAddSubject() {
-  var name = prompt("Enter Learning Area / Subject Name (e.g. Science, Computer, Journalism):");
+  var name = prompt("Enter the learning area / subject name (e.g., Science, Computer, Journalism):");
   if (!name || !name.trim()) return;
   name = name.trim();
   if (appState.subjects[name]) {
-    alert("Subject already exists!");
+    alert("That subject already exists.");
     selectSubject(name);
     return;
   }
@@ -1682,10 +1140,10 @@ function promptAddSubject() {
 function deleteCurrentSubject() {
   var keys = Object.keys(appState.subjects);
   if (keys.length <= 1) {
-    alert("You must have at least one subject.");
+    alert("At least one learning area is required.");
     return;
   }
-  if (confirm("Delete '" + appState.activeSubject + "' and all its scores?")) {
+  if (confirm("Delete \"" + appState.activeSubject + "\" and all of its scores?")) {
     delete appState.subjects[appState.activeSubject];
     appState.activeSubject = Object.keys(appState.subjects)[0];
     renderAll();
@@ -1695,29 +1153,43 @@ function deleteCurrentSubject() {
 
 function switchTab(tabId) {
   appState.activeTab = tabId;
-  document.querySelectorAll(".tab-btn").forEach(function(btn) { btn.classList.remove("active"); });
-  document.querySelectorAll(".tab-content").forEach(function(cnt) { cnt.classList.remove("active"); });
-
+  document.querySelectorAll(".seg-btn").forEach(function (b) { b.classList.remove("active"); });
   var b = document.getElementById("tab-btn-" + tabId);
   if (b) b.classList.add("active");
 
   var termCont = document.getElementById("term-view-container");
-  if (tabId === "term1" || tabId === "term2" || tabId === "term3") {
-    termCont.style.display = "block";
-    renderTermView(tabId);
-  } else {
-    termCont.style.display = "none";
-    var c = document.getElementById("tab-content-" + tabId);
-    if (c) c.classList.add("active");
-    if (tabId === "summary") renderSummaryTab();
-    if (tabId === "goal") calculateGoal();
-  }
+  var isTerm = tabId === "term1" || tabId === "term2" || tabId === "term3";
+  termCont.style.display = isTerm ? "block" : "none";
+  document.getElementById("tab-content-summary").style.display = tabId === "summary" ? "block" : "none";
+  document.getElementById("tab-content-goal").style.display = tabId === "goal" ? "block" : "none";
+
+  if (isTerm) renderTermView(tabId);
+  else if (tabId === "summary") renderSummaryTab();
+  else if (tabId === "goal") calculateGoal();
+}
+
+/* ---------- Term view ---------- */
+var COMP_META = {
+  ww: { title: "Written &amp; Oral Works", icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' },
+  pt: { title: "Performance &amp; Product Tasks", icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="10" r="1.2" fill="currentColor" stroke="none"/><path d="m8.5 15 .9-2.2a2.8 2.8 0 0 1 5.2 0l.9 2.2"/></svg>' },
+  ex: { title: "Summative Exams (DO 15)", icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6"/><path d="m9.5 13 1.8 1.8 3.2-3.6"/></svg>' }
+};
+
+function itemRowHtml(termId, comp, it, idx) {
+  return '<div class="item-row">' +
+    '<span class="item-num">' + (idx + 1) + "</span>" +
+    '<input class="item-name-input" value="' + escapeHtml(it.name) + '" placeholder="' + (comp === "ww" ? "Activity title" : "Task title") + '" autocomplete="off" oninput="updateItemName(\'' + termId + '\',\'' + comp + '\',' + idx + ',this.value)">' +
+    '<input type="number" class="item-hps-input" value="' + it.hps + '" min="1" placeholder="HPS" inputmode="numeric" oninput="updateItemHps(\'' + termId + '\',\'' + comp + '\',' + idx + ',this.value)">' +
+    '<input type="number" class="item-score-input" value="' + it.score + '" min="0" placeholder="Score" inputmode="numeric" oninput="updateItemScore(\'' + termId + '\',\'' + comp + '\',' + idx + ',this.value)">' +
+    '<button type="button" class="btn-del" onclick="deleteItem(\'' + termId + '\',\'' + comp + '\',' + idx + ')" title="Delete this row" aria-label="Delete this row">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete' +
+    "</button>" +
+    "</div>";
 }
 
 function renderTermView(termId) {
   var cont = document.getElementById("term-view-container");
   if (!cont) return;
-
   var subj = appState.subjects[appState.activeSubject];
   if (!subj) return;
   var assess = subj[termId];
@@ -1725,287 +1197,314 @@ function renderTermView(termId) {
 
   var res = calculateTerm(assess);
 
-  var html = '<div class="term-weights-card">' +
-    '<div class="weights-presets">' +
-      '<label>Weight Presets:</label>' +
-      '<button class="btn btn-outline-dark btn-sm" onclick="setPreset(\'' + termId + '\', 20, 50, 30)">Standard (20 / 50 / 30)</button>' +
-      '<button class="btn btn-outline-dark btn-sm" onclick="setPreset(\'' + termId + '\', 20, 60, 20)">EPP / TLE / MAPEH (20 / 60 / 20)</button>' +
-    '</div>' +
-    '<div class="weights-inputs">' +
-      '<div class="weight-pill">Written Works (WW): <input type="number" min="0" max="100" value="' + assess.weights.ww + '" oninput="updateWeight(\'' + termId + '\', \'ww\', this.value)">%</div>' +
-      '<div class="weight-pill">Performance Tasks (PT): <input type="number" min="0" max="100" value="' + assess.weights.pt + '" oninput="updateWeight(\'' + termId + '\', \'pt\', this.value)">%</div>' +
-      '<div class="weight-pill">Summative Exams: <input type="number" min="0" max="100" value="' + assess.weights.ex + '" oninput="updateWeight(\'' + termId + '\', \'ex\', this.value)">%</div>' +
-    '</div>' +
-  '</div>';
+  var html = '<div class="stack">';
 
-  html += '<div class="assessment-grid">';
+  /* Weights card */
+  html += '<section class="card weights-card">' +
+    '<div class="wc-row">' +
+      '<div class="wc-presets">' +
+        '<span class="mini-label">Weight presets</span>' +
+        '<div class="wc-btns">' +
+          '<button type="button" class="btn btn-tonal btn-sm" onclick="setPreset(\'' + termId + '\',20,50,30)">Standard · 20 / 50 / 30</button>' +
+          '<button type="button" class="btn btn-tonal btn-sm" onclick="setPreset(\'' + termId + '\',20,60,20)">EPP · TLE · MAPEH · 20 / 60 / 20</button>' +
+        "</div>" +
+      "</div>" +
+      '<div class="wc-inputs">' +
+        '<label class="weight-field"><span>WW %</span><input type="number" id="wt-ww" min="0" max="100" inputmode="numeric" value="' + assess.weights.ww + '" oninput="updateWeight(\'' + termId + '\',\'ww\',this.value)"></label>' +
+        '<label class="weight-field"><span>PT %</span><input type="number" id="wt-pt" min="0" max="100" inputmode="numeric" value="' + assess.weights.pt + '" oninput="updateWeight(\'' + termId + '\',\'pt\',this.value)"></label>' +
+        '<label class="weight-field"><span>Exams %</span><input type="number" id="wt-ex" min="0" max="100" inputmode="numeric" value="' + assess.weights.ex + '" oninput="updateWeight(\'' + termId + '\',\'ex\',this.value)"></label>' +
+      "</div>" +
+    "</div>" +
+  "</section>";
 
-  // 1. Written Works Card with PROMINENT DELETE BUTTON
-  html += '<div class="assess-card ww">' +
-    '<div class="card-header">' +
-      '<h3>📝 Written & Oral Works</h3>' +
-      '<span class="comp-tag">' + assess.weights.ww + '% Total Weight</span>' +
-    '</div>' +
-    '<div class="card-body">' +
-      '<div class="item-row item-row-header">' +
-        '<span>#</span><span>Activity Name</span><span style="text-align:center">HPS</span><span style="text-align:center">Score</span><span style="text-align:center">Action</span>' +
-      '</div>' +
-      '<div class="items-list">';
-  
-  if (assess.wwItems.length === 0) {
-    html += '<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.82rem;">No Written Works added yet. Click "+ Add Written Work" below.</div>';
+  /* Assessment cards */
+  html += '<div class="assess-grid">';
+
+  /* Written works */
+  html += '<section class="assess-card ac-ww">' +
+    '<div class="ac-head"><span class="ac-icon">' + COMP_META.ww.icon + "</span><h3>" + COMP_META.ww.title + '</h3><span class="ac-tag" id="tag-ww">' + assess.weights.ww + "% weight</span></div>" +
+    '<div class="item-row-header"><span class="h-name">Activity</span><span class="h-hps">HPS</span><span class="h-score">Score</span><span class="h-act">Action</span></div>' +
+    '<div class="items-list" id="list-ww">';
+  if (!assess.wwItems.length) {
+    html += '<div class="items-empty">No written works yet — tap “Add Written Work” to begin.</div>';
   } else {
-    assess.wwItems.forEach(function(it, idx) {
-      html += '<div class="item-row">' +
-        '<span class="item-num">' + (idx + 1) + '</span>' +
-        '<input class="item-name-input" value="' + escapeHtml(it.name) + '" placeholder="Activity title" oninput="updateItemName(\'' + termId + '\', \'ww\', ' + idx + ', this.value)">' +
-        '<input type="number" class="item-hps-input" value="' + it.hps + '" min="1" placeholder="HPS" oninput="updateItemHps(\'' + termId + '\', \'ww\', ' + idx + ', this.value)">' +
-        '<input type="number" class="item-score-input" value="' + it.score + '" min="0" placeholder="Score" oninput="updateItemScore(\'' + termId + '\', \'ww\', ' + idx + ', this.value)">' +
-        '<button class="btn-delete-item" onclick="deleteItem(\'' + termId + '\', \'ww\', ' + idx + ')" title="Delete assessment row">' +
-          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete' +
-        '</button>' +
-      '</div>';
-    });
+    assess.wwItems.forEach(function (it, idx) { html += itemRowHtml(termId, "ww", it, idx); });
   }
+  html += "</div>" +
+    '<div class="add-row no-print"><button type="button" class="btn btn-tonal btn-sm" onclick="addItem(\'' + termId + '\',\'ww\')">＋ Add Written Work</button></div>' +
+    '<div class="ac-stats">' +
+      '<div class="stat"><span class="s-l">Raw score</span><span class="s-v" id="st-ww-raw">' + res.ww.raw + " / " + res.ww.hps + "</span></div>" +
+      '<div class="stat"><span class="s-l">Percentage</span><span class="s-v" id="st-ww-ps">' + res.ww.ps.toFixed(2) + "%</span></div>" +
+      '<div class="stat"><span class="s-l">Weighted</span><span class="s-v hl" id="st-ww-ws">' + res.ww.ws.toFixed(2) + "</span></div>" +
+    "</div>" +
+  "</section>";
 
-  html += '</div>' +
-      '<button class="btn btn-outline-dark btn-sm" style="margin-top: 6px;" onclick="addItem(\'' + termId + '\', \'ww\')">＋ Add Written Work</button>' +
-    '</div>' +
-    '<div class="card-footer">' +
-      '<div class="stat-pill"><span class="stat-lbl">Raw Total</span><span class="stat-val">' + res.ww.raw + ' / ' + res.ww.hps + '</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Percentage (PS)</span><span class="stat-val">' + res.ww.ps.toFixed(2) + '%</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Weighted (WS)</span><span class="stat-val" style="color: var(--primary-light);">' + res.ww.ws.toFixed(2) + '</span></div>' +
-    '</div>' +
-  '</div>';
-
-  // 2. Performance Tasks Card with PROMINENT DELETE BUTTON
-  html += '<div class="assess-card pt">' +
-    '<div class="card-header">' +
-      '<h3>🎨 Performance & Product Tasks</h3>' +
-      '<span class="comp-tag">' + assess.weights.pt + '% Total Weight</span>' +
-    '</div>' +
-    '<div class="card-body">' +
-      '<div class="item-row item-row-header">' +
-        '<span>#</span><span>Task Name</span><span style="text-align:center">HPS</span><span style="text-align:center">Score</span><span style="text-align:center">Action</span>' +
-      '</div>' +
-      '<div class="items-list">';
-  
-  if (assess.ptItems.length === 0) {
-    html += '<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.82rem;">No Performance Tasks added yet. Click "+ Add Performance Task" below.</div>';
+  /* Performance tasks */
+  html += '<section class="assess-card ac-pt">' +
+    '<div class="ac-head"><span class="ac-icon">' + COMP_META.pt.icon + "</span><h3>" + COMP_META.pt.title + '</h3><span class="ac-tag" id="tag-pt">' + assess.weights.pt + "% weight</span></div>" +
+    '<div class="item-row-header"><span class="h-name">Task</span><span class="h-hps">HPS</span><span class="h-score">Score</span><span class="h-act">Action</span></div>' +
+    '<div class="items-list" id="list-pt">';
+  if (!assess.ptItems.length) {
+    html += '<div class="items-empty">No performance tasks yet — tap “Add Performance Task” to begin.</div>';
   } else {
-    assess.ptItems.forEach(function(it, idx) {
-      html += '<div class="item-row">' +
-        '<span class="item-num">' + (idx + 1) + '</span>' +
-        '<input class="item-name-input" value="' + escapeHtml(it.name) + '" placeholder="Task title" oninput="updateItemName(\'' + termId + '\', \'pt\', ' + idx + ', this.value)">' +
-        '<input type="number" class="item-hps-input" value="' + it.hps + '" min="1" placeholder="HPS" oninput="updateItemHps(\'' + termId + '\', \'pt\', ' + idx + ', this.value)">' +
-        '<input type="number" class="item-score-input" value="' + it.score + '" min="0" placeholder="Score" oninput="updateItemScore(\'' + termId + '\', \'pt\', ' + idx + ', this.value)">' +
-        '<button class="btn-delete-item" onclick="deleteItem(\'' + termId + '\', \'pt\', ' + idx + ')" title="Delete assessment row">' +
-          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete' +
-        '</button>' +
-      '</div>';
-    });
+    assess.ptItems.forEach(function (it, idx) { html += itemRowHtml(termId, "pt", it, idx); });
   }
+  html += "</div>" +
+    '<div class="add-row no-print"><button type="button" class="btn btn-tonal btn-sm" onclick="addItem(\'' + termId + '\',\'pt\')">＋ Add Performance Task</button></div>' +
+    '<div class="ac-stats">' +
+      '<div class="stat"><span class="s-l">Raw score</span><span class="s-v" id="st-pt-raw">' + res.pt.raw + " / " + res.pt.hps + "</span></div>" +
+      '<div class="stat"><span class="s-l">Percentage</span><span class="s-v" id="st-pt-ps">' + res.pt.ps.toFixed(2) + "%</span></div>" +
+      '<div class="stat"><span class="s-l">Weighted</span><span class="s-v hl" id="st-pt-ws">' + res.pt.ws.toFixed(2) + "</span></div>" +
+    "</div>" +
+  "</section>";
 
-  html += '</div>' +
-      '<button class="btn btn-outline-dark btn-sm" style="margin-top: 6px;" onclick="addItem(\'' + termId + '\', \'pt\')">＋ Add Performance Task</button>' +
-    '</div>' +
-    '<div class="card-footer">' +
-      '<div class="stat-pill"><span class="stat-lbl">Raw Total</span><span class="stat-val">' + res.pt.raw + ' / ' + res.pt.hps + '</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Percentage (PS)</span><span class="stat-val">' + res.pt.ps.toFixed(2) + '%</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Weighted (WS)</span><span class="stat-val" style="color: var(--primary-light);">' + res.pt.ws.toFixed(2) + '</span></div>' +
-    '</div>' +
-  '</div>';
+  /* Exams */
+  var ex = assess.exams;
+  html += '<section class="assess-card ac-ex">' +
+    '<div class="ac-head"><span class="ac-icon">' + COMP_META.ex.icon + "</span><h3>" + COMP_META.ex.title + '</h3><span class="ac-tag" id="tag-ex">' + assess.weights.ex + "% weight</span></div>" +
+    '<div class="item-row-header"><span class="h-name">Exam component</span><span class="h-hps">HPS</span><span class="h-score">Score</span><span class="h-act">Share</span></div>' +
+    '<div class="items-list">' +
+      '<div class="item-row"><span class="item-num">1</span>' +
+        '<input class="item-name-input" value="Summative Test 1" readonly tabindex="-1">' +
+        '<input type="number" class="item-hps-input" value="' + ex.st1.hps + '" min="1" inputmode="numeric" placeholder="HPS" oninput="updateExamField(\'' + termId + '\',\'st1\',\'hps\',this.value)">' +
+        '<input type="number" class="item-score-input" value="' + ex.st1.score + '" min="0" inputmode="numeric" placeholder="Score" oninput="updateExamField(\'' + termId + '\',\'st1\',\'score\',this.value)">' +
+        '<span class="item-share" id="share-st1">' + (assess.weights.ex * 0.30).toFixed(1) + "%</span></div>" +
+      '<div class="item-row"><span class="item-num">2</span>' +
+        '<input class="item-name-input" value="Summative Test 2" readonly tabindex="-1">' +
+        '<input type="number" class="item-hps-input" value="' + ex.st2.hps + '" min="1" inputmode="numeric" placeholder="HPS" oninput="updateExamField(\'' + termId + '\',\'st2\',\'hps\',this.value)">' +
+        '<input type="number" class="item-score-input" value="' + ex.st2.score + '" min="0" inputmode="numeric" placeholder="Score" oninput="updateExamField(\'' + termId + '\',\'st2\',\'score\',this.value)">' +
+        '<span class="item-share" id="share-st2">' + (assess.weights.ex * 0.30).toFixed(1) + "%</span></div>" +
+      '<div class="item-row"><span class="item-num">3</span>' +
+        '<input class="item-name-input" value="Term Examination" readonly tabindex="-1">' +
+        '<input type="number" class="item-hps-input" value="' + ex.te.hps + '" min="1" inputmode="numeric" placeholder="HPS" oninput="updateExamField(\'' + termId + '\',\'te\',\'hps\',this.value)">' +
+        '<input type="number" class="item-score-input" value="' + ex.te.score + '" min="0" inputmode="numeric" placeholder="Score" oninput="updateExamField(\'' + termId + '\',\'te\',\'score\',this.value)">' +
+        '<span class="item-share" id="share-te">' + (assess.weights.ex * 0.40).toFixed(1) + "%</span></div>" +
+    "</div>" +
+    '<div class="ac-stats">' +
+      '<div class="stat"><span class="s-l">Raw score</span><span class="s-v" id="st-ex-raw">' + res.ex.totalRaw + " / " + res.ex.totalHps + "</span></div>" +
+      '<div class="stat"><span class="s-l">Percentage</span><span class="s-v" id="st-ex-ps">' + res.ex.ps.toFixed(2) + "%</span></div>" +
+      '<div class="stat"><span class="s-l">Weighted</span><span class="s-v hl" id="st-ex-ws">' + res.ex.ws.toFixed(2) + "</span></div>" +
+    "</div>" +
+  "</section>";
 
-  // 3. Examinations Card (ST1 30%, ST2 30%, TE 40%)
-  var st1Share = (assess.weights.ex * 0.30).toFixed(1);
-  var st2Share = (assess.weights.ex * 0.30).toFixed(1);
-  var teShare = (assess.weights.ex * 0.40).toFixed(1);
+  html += "</div>"; /* assess-grid */
 
-  html += '<div class="assess-card ex">' +
-    '<div class="card-header">' +
-      '<h3>📋 Summative Exams (DO 15)</h3>' +
-      '<span class="comp-tag">' + assess.weights.ex + '% Total Weight</span>' +
-    '</div>' +
-    '<div class="card-body">' +
-      '<div class="item-row item-row-header">' +
-        '<span>#</span><span>Exam Component</span><span style="text-align:center">HPS</span><span style="text-align:center">Score</span><span style="text-align:center">Weight</span>' +
-      '</div>' +
-      '<div class="items-list">' +
-        '<div class="item-row">' +
-          '<span class="item-num">1</span>' +
-          '<input class="item-name-input" value="Summative Test 1" readonly>' +
-          '<input type="number" class="item-hps-input" value="' + assess.exams.st1.hps + '" min="1" oninput="updateExamField(\'' + termId + '\', \'st1\', \'hps\', this.value)">' +
-          '<input type="number" class="item-score-input" value="' + assess.exams.st1.score + '" min="0" oninput="updateExamField(\'' + termId + '\', \'st1\', \'score\', this.value)">' +
-          '<span style="font-size:0.75rem;font-weight:800;color:var(--text-muted);text-align:center">' + st1Share + '%</span>' +
-        '</div>' +
-        '<div class="item-row">' +
-          '<span class="item-num">2</span>' +
-          '<input class="item-name-input" value="Summative Test 2" readonly>' +
-          '<input type="number" class="item-hps-input" value="' + assess.exams.st2.hps + '" min="1" oninput="updateExamField(\'' + termId + '\', \'st2\', \'hps\', this.value)">' +
-          '<input type="number" class="item-score-input" value="' + assess.exams.st2.score + '" min="0" oninput="updateExamField(\'' + termId + '\', \'st2\', \'score\', this.value)">' +
-          '<span style="font-size:0.75rem;font-weight:800;color:var(--text-muted);text-align:center">' + st2Share + '%</span>' +
-        '</div>' +
-        '<div class="item-row">' +
-          '<span class="item-num">3</span>' +
-          '<input class="item-name-input" value="Term Examination" readonly>' +
-          '<input type="number" class="item-hps-input" value="' + assess.exams.te.hps + '" min="1" oninput="updateExamField(\'' + termId + '\', \'te\', \'hps\', this.value)">' +
-          '<input type="number" class="item-score-input" value="' + assess.exams.te.score + '" min="0" oninput="updateExamField(\'' + termId + '\', \'te\', \'score\', this.value)">' +
-          '<span style="font-size:0.75rem;font-weight:800;color:var(--text-muted);text-align:center">' + teShare + '%</span>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="card-footer">' +
-      '<div class="stat-pill"><span class="stat-lbl">Raw Total</span><span class="stat-val">' + res.ex.totalRaw + ' / ' + res.ex.totalHps + '</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Percentage (PS)</span><span class="stat-val">' + res.ex.ps.toFixed(2) + '%</span></div>' +
-      '<div class="stat-pill"><span class="stat-lbl">Weighted (WS)</span><span class="stat-val" style="color: var(--primary-light);">' + res.ex.ws.toFixed(2) + '</span></div>' +
-    '</div>' +
-  '</div>';
+  /* Result banner */
+  var has = termHasData(assess);
+  var d = has ? res.descriptor : DESC.none;
+  html += '<div class="result-banner" id="term-result" style="background:' + (has ? d.tint : "var(--card)") + ';">' +
+    '<div class="rb-metric">' +
+      '<span class="rb-lbl">Initial Grade</span>' +
+      '<span class="rb-val" id="res-init">' + (has ? res.initialGrade.toFixed(2) : "—") + "</span>" +
+      '<span class="rb-sub" id="res-init-sub">WW ' + res.ww.ws.toFixed(1) + " + PT " + res.pt.ws.toFixed(1) + " + Exams " + res.ex.ws.toFixed(1) + "</span>" +
+    "</div>" +
+    '<div class="rb-metric">' +
+      '<span class="rb-lbl">Transmuted Term Grade</span>' +
+      '<span class="rb-val big" id="res-tg" style="color:' + d.fg + ';">' + (has ? res.transmutedGrade : "—") + "</span>" +
+      '<span class="rb-sub" id="res-desc">' + (has ? d.title + " · " + d.range : "Enter scores to compute the grade") + "</span>" +
+    "</div>" +
+    '<div class="rb-badge-wrap"><span id="res-badge">' + levelBadgeHtml(d) + "</span></div>" +
+  "</div>";
 
-  html += '</div>'; // End assessment-grid
-
-  // Term Result Score Banner
-  html += '<div class="term-result-banner">' +
-    '<div class="result-metric">' +
-      '<span class="lbl">Initial Grade (Total Score)</span>' +
-      '<span class="val">' + res.initialGrade.toFixed(2) + '</span>' +
-      '<span class="desc">WW (' + res.ww.ws.toFixed(1) + ') + PT (' + res.pt.ws.toFixed(1) + ') + Exams (' + res.ex.ws.toFixed(1) + ')</span>' +
-    '</div>' +
-    '<div class="result-metric">' +
-      '<span class="lbl">Transmuted Term Grade</span>' +
-      '<span class="val" style="color: var(--accent-light);">' + res.transmutedGrade + '</span>' +
-      '<span class="desc">' + res.descriptor.icon + ' ' + res.descriptor.title + '</span>' +
-    '</div>' +
-    '<div style="text-align: right;">' +
-      '<span class="level-badge ' + res.descriptor.badgeCls + '">' + res.descriptor.icon + ' ' + res.descriptor.short + '</span>' +
-    '</div>' +
-  '</div>';
-
+  html += "</div>"; /* stack */
   cont.innerHTML = html;
 }
 
-/* Edit Handlers */
+/* Surgical refresh: updates only computed numbers — inputs keep focus */
+function refreshTerm(termId) {
+  var subj = appState.subjects[appState.activeSubject];
+  if (!subj) return;
+  var assess = subj[termId];
+  if (!assess) return;
+  var res = calculateTerm(assess);
+  var has = termHasData(assess);
+  var d = has ? res.descriptor : DESC.none;
+
+  function put(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+
+  put("st-ww-raw", res.ww.raw + " / " + res.ww.hps);
+  put("st-ww-ps", res.ww.ps.toFixed(2) + "%");
+  put("st-ww-ws", res.ww.ws.toFixed(2));
+  put("st-pt-raw", res.pt.raw + " / " + res.pt.hps);
+  put("st-pt-ps", res.pt.ps.toFixed(2) + "%");
+  put("st-pt-ws", res.pt.ws.toFixed(2));
+  put("st-ex-raw", res.ex.totalRaw + " / " + res.ex.totalHps);
+  put("st-ex-ps", res.ex.ps.toFixed(2) + "%");
+  put("st-ex-ws", res.ex.ws.toFixed(2));
+
+  put("tag-ww", assess.weights.ww + "% weight");
+  put("tag-pt", assess.weights.pt + "% weight");
+  put("tag-ex", assess.weights.ex + "% weight");
+  put("share-st1", (assess.weights.ex * 0.30).toFixed(1) + "%");
+  put("share-st2", (assess.weights.ex * 0.30).toFixed(1) + "%");
+  put("share-te", (assess.weights.ex * 0.40).toFixed(1) + "%");
+
+  put("res-init", has ? res.initialGrade.toFixed(2) : "—");
+  put("res-init-sub", "WW " + res.ww.ws.toFixed(1) + " + PT " + res.pt.ws.toFixed(1) + " + Exams " + res.ex.ws.toFixed(1));
+  var tgEl = document.getElementById("res-tg");
+  if (tgEl) { tgEl.textContent = has ? res.transmutedGrade : "—"; tgEl.style.color = d.fg; }
+  put("res-desc", has ? d.title + " · " + d.range : "Enter scores to compute the grade");
+  var badgeWrap = document.getElementById("res-badge");
+  if (badgeWrap) badgeWrap.innerHTML = levelBadgeHtml(d);
+  var banner = document.getElementById("term-result");
+  if (banner) banner.style.background = has ? d.tint : "var(--card)";
+
+  refreshBadges();
+}
+
+/* Tab badges + active subject pill grade */
+function refreshBadges() {
+  var subj = appState.subjects[appState.activeSubject];
+  if (!subj) return;
+  var fin = calculateSubjectFinal(subj);
+  function put(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+  put("tab-badge-term1", fin.t1 === null ? "—" : fin.t1);
+  put("tab-badge-term2", fin.t2 === null ? "—" : fin.t2);
+  put("tab-badge-term3", fin.t3 === null ? "—" : fin.t3);
+  put("tab-badge-summary", fin.finalGrade === null ? "—" : fin.finalGrade);
+  var pill = document.querySelector(".subject-pill.active .pill-grade");
+  if (pill) {
+    pill.textContent = fin.finalGrade === null ? "New" : fin.finalGrade;
+    pill.classList.toggle("grade-dash", fin.finalGrade === null);
+  }
+}
+
+/* ---------- Edit handlers (focus-safe, debounced saves) ---------- */
 function updateWeight(termId, comp, val) {
   var v = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
   appState.subjects[appState.activeSubject][termId].weights[comp] = v;
-  renderAll();
-  saveToDevice(false);
+  refreshTerm(termId);
+  queueSave();
 }
 
 function setPreset(termId, ww, pt, ex) {
   var s = appState.subjects[appState.activeSubject][termId];
   s.weights.ww = ww; s.weights.pt = pt; s.weights.ex = ex;
-  renderAll();
-  saveToDevice(false);
+  renderTermView(termId);
+  refreshBadges();
+  queueSave();
+  showToast("Weights set to " + ww + " / " + pt + " / " + ex);
+}
+
+function itemsList(termId, comp) {
+  var t = appState.subjects[appState.activeSubject][termId];
+  return comp === "ww" ? t.wwItems : t.ptItems;
 }
 
 function updateItemName(termId, comp, idx, val) {
-  var list = (comp === 'ww') ? appState.subjects[appState.activeSubject][termId].wwItems : appState.subjects[appState.activeSubject][termId].ptItems;
+  var list = itemsList(termId, comp);
   if (list[idx]) list[idx].name = val;
-  saveToDevice(false);
+  queueSave();
 }
 
 function updateItemHps(termId, comp, idx, val) {
-  var list = (comp === 'ww') ? appState.subjects[appState.activeSubject][termId].wwItems : appState.subjects[appState.activeSubject][termId].ptItems;
+  var list = itemsList(termId, comp);
   if (list[idx]) list[idx].hps = Math.max(1, parseFloat(val) || 1);
-  renderAll();
-  saveToDevice(false);
+  refreshTerm(termId);
+  queueSave();
 }
 
 function updateItemScore(termId, comp, idx, val) {
-  var list = (comp === 'ww') ? appState.subjects[appState.activeSubject][termId].wwItems : appState.subjects[appState.activeSubject][termId].ptItems;
+  var list = itemsList(termId, comp);
   if (list[idx]) list[idx].score = Math.max(0, parseFloat(val) || 0);
-  renderAll();
-  saveToDevice(false);
+  refreshTerm(termId);
+  queueSave();
 }
 
 function addItem(termId, comp) {
-  var s = appState.subjects[appState.activeSubject][termId];
-  var list = (comp === 'ww') ? s.wwItems : s.ptItems;
-  var count = list.length + 1;
+  var list = itemsList(termId, comp);
   list.push({
-    name: (comp === 'ww' ? 'Written Work ' : 'Performance Task ') + count,
-    hps: comp === 'ww' ? 20 : 30,
+    name: (comp === "ww" ? "Written Work " : "Performance Task ") + (list.length + 1),
+    hps: comp === "ww" ? 20 : 30,
     score: 0
   });
-  renderAll();
-  saveToDevice(false);
+  renderTermView(termId);
+  refreshBadges();
+  queueSave();
+  /* focus the new name field */
+  var listEl = document.getElementById("list-" + comp);
+  if (listEl) {
+    var rows = listEl.querySelectorAll(".item-row");
+    var last = rows[rows.length - 1];
+    if (last) { var inp = last.querySelector(".item-name-input"); if (inp) inp.focus(); }
+  }
 }
 
 function deleteItem(termId, comp, idx) {
-  var list = (comp === 'ww') ? appState.subjects[appState.activeSubject][termId].wwItems : appState.subjects[appState.activeSubject][termId].ptItems;
-  if (confirm("Delete this assessment item?")) {
+  if (confirm("Delete this assessment row?")) {
+    var list = itemsList(termId, comp);
     list.splice(idx, 1);
-    renderAll();
-    saveToDevice(false);
-    showToast("Assessment deleted.");
+    renderTermView(termId);
+    refreshBadges();
+    queueSave();
+    showToast("Assessment deleted");
   }
 }
 
 function updateExamField(termId, examKey, field, val) {
   var ex = appState.subjects[appState.activeSubject][termId].exams[examKey];
-  if (ex) {
-    ex[field] = Math.max(field === 'hps' ? 1 : 0, parseFloat(val) || 0);
-  }
-  renderAll();
-  saveToDevice(false);
+  if (ex) ex[field] = Math.max(field === "hps" ? 1 : 0, parseFloat(val) || 0);
+  refreshTerm(termId);
+  queueSave();
 }
 
 /* ==========================================================================
-   REPORT CARD / 3-TERM SUMMARY
+   SUMMARY / REPORT CARD
    ========================================================================== */
+function gradeCell(v) { return v === null ? '<span class="grade-dash">—</span>' : String(v); }
+
 function renderSummaryTab() {
   var tbody = document.getElementById("all-subjects-tbody");
   if (!tbody) return;
 
   var html = "";
-  var t1Sum = 0, t2Sum = 0, t3Sum = 0, fgSum = 0, count = 0;
+  var sums = { t1: 0, t2: 0, t3: 0, fg: 0 }, counts = { t1: 0, t2: 0, t3: 0, fg: 0 };
 
-  var keys = Object.keys(appState.subjects);
-  keys.forEach(function(subKey) {
-    var sObj = appState.subjects[subKey];
-    var fin = calculateSubjectFinal(sObj);
-    t1Sum += fin.t1; t2Sum += fin.t2; t3Sum += fin.t3; fgSum += fin.finalGrade;
-    count++;
+  Object.keys(appState.subjects).forEach(function (subKey) {
+    var fin = calculateSubjectFinal(appState.subjects[subKey]);
+    if (fin.t1 !== null) { sums.t1 += fin.t1; counts.t1++; }
+    if (fin.t2 !== null) { sums.t2 += fin.t2; counts.t2++; }
+    if (fin.t3 !== null) { sums.t3 += fin.t3; counts.t3++; }
+    if (fin.finalGrade !== null) { sums.fg += fin.finalGrade; counts.fg++; }
 
-    html += '<tr>' +
-      '<td class="subject-name">' + escapeHtml(subKey) + '</td>' +
-      '<td class="grade-val">' + fin.t1 + '</td>' +
-      '<td class="grade-val">' + fin.t2 + '</td>' +
-      '<td class="grade-val">' + fin.t3 + '</td>' +
-      '<td class="grade-val" style="color: var(--primary); font-weight:900;">' + fin.finalGrade + '</td>' +
-      '<td><span class="level-badge ' + fin.descriptor.badgeCls + '" style="font-size:0.75rem; padding:3px 8px;">' + fin.descriptor.icon + ' ' + fin.descriptor.short + '</span></td>' +
-    '</tr>';
+    html += "<tr>" +
+      '<td class="subj-cell" data-label="">' + escapeHtml(subKey) + "</td>" +
+      '<td data-label="Term 1">' + gradeCell(fin.t1) + "</td>" +
+      '<td data-label="Term 2">' + gradeCell(fin.t2) + "</td>" +
+      '<td data-label="Term 3">' + gradeCell(fin.t3) + "</td>" +
+      '<td data-label="Final" style="font-weight:800;">' + gradeCell(fin.finalGrade) + "</td>" +
+      '<td data-label="Level">' + levelBadgeHtml(fin.descriptor, true) + "</td>" +
+    "</tr>";
   });
-
   tbody.innerHTML = html;
 
-  if (count > 0) {
-    var avgT1 = Math.round(t1Sum / count);
-    var avgT2 = Math.round(t2Sum / count);
-    var avgT3 = Math.round(t3Sum / count);
-    var genAvg = Math.round(fgSum / count);
-    var genDesc = getDescriptor(genAvg);
+  function avg(k) { return counts[k] ? Math.round(sums[k] / counts[k]) : null; }
+  var avgT1 = avg("t1"), avgT2 = avg("t2"), avgT3 = avg("t3"), genAvg = avg("fg");
 
-    document.getElementById("gen-avg-t1").textContent = avgT1;
-    document.getElementById("gen-avg-t2").textContent = avgT2;
-    document.getElementById("gen-avg-t3").textContent = avgT3;
-    document.getElementById("gen-avg-final").textContent = genAvg;
-    document.getElementById("gen-avg-desc").innerHTML = '<span class="level-badge ' + genDesc.badgeCls + '" style="font-size:0.78rem; padding:3px 8px;">' + genDesc.icon + ' ' + genDesc.short + '</span>';
+  document.getElementById("gen-avg-t1").innerHTML = gradeCell(avgT1);
+  document.getElementById("gen-avg-t2").innerHTML = gradeCell(avgT2);
+  document.getElementById("gen-avg-t3").innerHTML = gradeCell(avgT3);
+  document.getElementById("gen-avg-final").innerHTML = gradeCell(genAvg);
+  document.getElementById("gen-avg-desc").innerHTML = levelBadgeHtml(getDescriptor(genAvg), true);
 
-    var honorStatus = "Promoted (Passed)";
-    if (genAvg >= 98) honorStatus = "🌟 With Highest Honors (Advancing: 98–100)";
-    else if (genAvg >= 95) honorStatus = "🎖 With High Honors (Advancing: 95–97)";
-    else if (genAvg >= 90) honorStatus = "🏅 With Honors (Advancing: 90–94)";
-    else if (genAvg < 75) honorStatus = "⚠️ For Academic Remediation (Emerging: <75)";
-
-    document.getElementById("honor-status-badge").textContent = honorStatus;
+  var honor = "Add grades to see the promotion status";
+  if (genAvg !== null) {
+    if (genAvg >= 98) honor = "With Highest Honors (98–100)";
+    else if (genAvg >= 95) honor = "With High Honors (95–97)";
+    else if (genAvg >= 90) honor = "With Honors (90–94)";
+    else if (genAvg >= 75) honor = "Promoted — Passed";
+    else honor = "For academic remediation (below 75)";
   }
+  document.getElementById("honor-status-badge").textContent = honor;
 }
 
 /* ==========================================================================
-   WHAT-IF / GOAL PLANNER
+   GOAL PLANNER
    ========================================================================== */
 function calculateGoal() {
+  var box = document.getElementById("goal-result-box");
+  if (!box) return;
+
   var targetTg = parseInt(document.getElementById("goal-target-grade").value, 10) || 90;
   var termId = document.getElementById("goal-term").value || "term1";
   var targetComp = document.getElementById("goal-target-comp").value || "te";
@@ -2016,228 +1515,179 @@ function calculateGoal() {
   var assess = subj[termId];
   if (!assess) return;
 
-  var requiredInitial = minInitialForTransmuted(targetTg);
+  if (!termHasData(assess)) {
+    box.innerHTML = '<div class="goal-panel goal-empty">' +
+      '<span class="gp-kicker">Getting started</span>' +
+      "<p>Add at least one score in " + escapeHtml(termId.replace("term", "Term ")) + " of <strong>" + escapeHtml(appState.activeSubject) + "</strong> first, then come back to plan your target grade.</p></div>";
+    return;
+  }
 
+  var requiredInitial = minInitialForTransmuted(targetTg);
   var ww = calculateComponent(assess.wwItems);
   var pt = calculateComponent(assess.ptItems);
   var ex = calculateExams(assess.exams, assess.weights.ex);
-
   var ww_ws = ww.ps * (assess.weights.ww / 100);
   var pt_ws = pt.ps * (assess.weights.pt / 100);
 
-  var currentOtherWS = 0;
-  var neededComponentWS = 0;
-  var neededRawScore = 0;
-  var neededPS = 0;
-  var compName = "";
+  var currentOtherWS = 0, neededComponentWS = 0, neededRawScore = 0, neededPS = 0, compName = "";
 
   if (targetComp === "te") {
     compName = "Term Examination";
-    var st1_ws = ex.st1.ws;
-    var st2_ws = ex.st2.ws;
-    currentOtherWS = ww_ws + pt_ws + st1_ws + st2_ws;
+    currentOtherWS = ww_ws + pt_ws + ex.st1.ws + ex.st2.ws;
     neededComponentWS = requiredInitial - currentOtherWS;
-    var teWeightShare = assess.weights.ex * 0.40;
-    neededPS = (neededComponentWS / teWeightShare) * 100;
+    neededPS = (neededComponentWS / (assess.weights.ex * 0.40)) * 100;
     neededRawScore = Math.ceil((neededPS / 100) * hps);
   } else if (targetComp === "st2") {
     compName = "Summative Test 2";
-    var st1_ws = ex.st1.ws;
-    var te_ws = ex.te.ws;
-    currentOtherWS = ww_ws + pt_ws + st1_ws + te_ws;
+    currentOtherWS = ww_ws + pt_ws + ex.st1.ws + ex.te.ws;
     neededComponentWS = requiredInitial - currentOtherWS;
-    var st2WeightShare = assess.weights.ex * 0.30;
-    neededPS = (neededComponentWS / st2WeightShare) * 100;
+    neededPS = (neededComponentWS / (assess.weights.ex * 0.30)) * 100;
     neededRawScore = Math.ceil((neededPS / 100) * hps);
   } else if (targetComp === "st1") {
     compName = "Summative Test 1";
-    var st2_ws = ex.st2.ws;
-    var te_ws = ex.te.ws;
-    currentOtherWS = ww_ws + pt_ws + st2_ws + te_ws;
+    currentOtherWS = ww_ws + pt_ws + ex.st2.ws + ex.te.ws;
     neededComponentWS = requiredInitial - currentOtherWS;
-    var st1WeightShare = assess.weights.ex * 0.30;
-    neededPS = (neededComponentWS / st1WeightShare) * 100;
+    neededPS = (neededComponentWS / (assess.weights.ex * 0.30)) * 100;
     neededRawScore = Math.ceil((neededPS / 100) * hps);
   } else if (targetComp === "pt") {
     compName = "Next Performance Task";
-    var curPtRaw = pt.raw;
     var newPtHps = pt.hps + hps;
     currentOtherWS = ww_ws + ex.ws;
     neededComponentWS = requiredInitial - currentOtherWS;
     neededPS = (neededComponentWS / assess.weights.pt) * 100;
-    var neededTotalPtRaw = (neededPS / 100) * newPtHps;
-    neededRawScore = Math.ceil(neededTotalPtRaw - curPtRaw);
-  } else if (targetComp === "ww") {
+    neededRawScore = Math.ceil((neededPS / 100) * newPtHps - pt.raw);
+  } else {
     compName = "Next Written Work / Quiz";
-    var curWwRaw = ww.raw;
     var newWwHps = ww.hps + hps;
     currentOtherWS = pt_ws + ex.ws;
     neededComponentWS = requiredInitial - currentOtherWS;
     neededPS = (neededComponentWS / assess.weights.ww) * 100;
-    var neededTotalWwRaw = (neededPS / 100) * newWwHps;
-    neededRawScore = Math.ceil(neededTotalWwRaw - curWwRaw);
+    neededRawScore = Math.ceil((neededPS / 100) * newWwHps - ww.raw);
   }
 
-  var box = document.getElementById("goal-result-box");
-  if (!box) return;
-
-  var isPossible = (neededRawScore <= hps);
-  var isAlreadyMet = (neededRawScore <= 0);
-
-  var outHtml = '<h4 style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 10px;">Calculation Result for ' + compName + '</h4>';
+  var isPossible = neededRawScore <= hps;
+  var isAlreadyMet = neededRawScore <= 0;
+  var d = getDescriptor(targetTg);
 
   if (isAlreadyMet) {
-    outHtml += '<div style="background: var(--color-adv-bg); border: 1px solid var(--color-adv-border); border-radius: 8px; padding: 14px; color: var(--color-adv);">' +
-      '<strong style="font-size: 1.1rem; display: block;">🎉 Target Already Secured!</strong>' +
-      '<span style="font-size: 0.85rem;">Your current assessment total in ' + escapeHtml(appState.activeSubject) + ' is already high enough to guarantee a transmuted grade of <strong>' + targetTg + '</strong>! Keep up the brilliant work!</span>' +
-      '</div>';
+    box.innerHTML = '<div class="goal-panel goal-win">' +
+      '<span class="gp-kicker">Great news</span>' +
+      '<div class="gp-big">Target secured!</div>' +
+      "<p>Your current scores in <strong>" + escapeHtml(appState.activeSubject) + "</strong> already guarantee a transmuted grade of <strong>" + targetTg + "</strong> (" + d.title + ") — even with a 0 on the " + compName + ". Keep up the excellent work!</p></div>";
   } else if (isPossible) {
-    outHtml += '<div style="background: var(--color-con-bg); border: 1px solid var(--color-con-border); border-radius: 8px; padding: 14px; color: var(--color-con);">' +
-      '<span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase;">Minimum Required Score:</span>' +
-      '<div style="font-size: 2.3rem; font-weight: 900; line-height: 1.1; margin: 4px 0;">' + neededRawScore + ' <span style="font-size: 1.1rem; color: #64748b;">/ ' + hps + '</span></div>' +
-      '<span style="font-size: 0.85rem; font-weight: 600;">You need at least <strong>' + neededRawScore + ' out of ' + hps + ' (' + Math.round((neededRawScore/hps)*100) + '%)</strong> on your ' + compName + ' to achieve a transmuted grade of <strong>' + targetTg + '</strong> (' + getDescriptor(targetTg).short + ').</span>' +
-      '</div>';
+    var pct = Math.round((neededRawScore / hps) * 100);
+    box.innerHTML = '<div class="goal-panel goal-possible">' +
+      '<span class="gp-kicker">Minimum score needed on the ' + escapeHtml(compName) + "</span>" +
+      '<div class="gp-big">' + neededRawScore + " <small>/ " + hps + "</small></div>" +
+      "<p>Score at least <strong>" + neededRawScore + " out of " + hps + " (" + pct + "%)</strong> to reach a transmuted grade of <strong>" + targetTg + "</strong> — " + d.title + " (" + d.range + "). You've got this!</p></div>";
   } else {
-    outHtml += '<div style="background: var(--color-eme-bg); border: 1px solid var(--color-eme-border); border-radius: 8px; padding: 14px; color: var(--color-eme);">' +
-      '<strong style="font-size: 1rem; display: block;">⚠️ Mathematical Reach Alert</strong>' +
-      '<span style="font-size: 0.85rem;">To reach ' + targetTg + ', you would need ' + neededRawScore + ' / ' + hps + ' (' + Math.round((neededRawScore/hps)*100) + '%), which exceeds the maximum score of ' + hps + '. Aim for the highest possible score to maximize your term standing!</span>' +
-      '</div>';
+    box.innerHTML = '<div class="goal-panel goal-reach">' +
+      '<span class="gp-kicker">Mathematical reach alert</span>' +
+      '<div class="gp-big">' + neededRawScore + " <small>/ " + hps + "</small></div>" +
+      "<p>Reaching <strong>" + targetTg + "</strong> would require " + neededRawScore + " / " + hps + " — more than the highest possible score. Aim for a perfect " + hps + " to maximize your term standing, or set a closer target.</p></div>";
   }
-
-  box.innerHTML = outHtml;
 }
 
 /* ==========================================================================
-   ACCESS & AUDIT LOG SYSTEM (PRIVACY BLURRED)
+   ACCESS & ACTIVITY LOG (privacy-blurred) — starts empty, no seed data
    ========================================================================== */
 var LOG_STORAGE_KEY = "gradecalc_access_logs";
 
 function getStoredLogs() {
   try {
     var raw = localStorage.getItem(LOG_STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  // Default seed sample logs for authentic DepEd school section context
-  return [
-    {
-      timestamp: "2026-09-23 08:30:15",
-      gradeSection: "Grade 7 - Diamond",
-      name: "Batumbakal, Maria S.",
-      term: "Term 1",
-      subject: "Mathematics",
-      wwSummary: "92.3% (WS: 18.5/20)",
-      ptSummary: "95.0% (WS: 47.5/50)",
-      exSummary: "91.2% (WS: 27.4/30)",
-      finalGrade: "93 (Advancing)"
-    },
-    {
-      timestamp: "2026-09-23 09:14:40",
-      gradeSection: "Grade 7 - Diamond",
-      name: "Dela Cruz, Juan M.",
-      term: "Term 1",
-      subject: "Science",
-      wwSummary: "85.0% (WS: 17.0/20)",
-      ptSummary: "88.0% (WS: 44.0/50)",
-      exSummary: "84.0% (WS: 25.2/30)",
-      finalGrade: "86 (Connecting)"
-    },
-    {
-      timestamp: "2026-09-23 10:05:22",
-      gradeSection: "Grade 7 - Diamond",
-      name: "Santos, Gabriel P.",
-      term: "Term 1",
-      subject: "English",
-      wwSummary: "96.0% (WS: 19.2/20)",
-      ptSummary: "94.5% (WS: 47.3/50)",
-      exSummary: "92.0% (WS: 27.6/30)",
-      finalGrade: "94 (Advancing)"
-    }
-  ];
+    if (raw) return JSON.parse(raw) || [];
+  } catch (e) {}
+  return [];
 }
 
 function logCurrentSession(showToastMsg) {
   try {
-    var logs = getStoredLogs();
     var subj = appState.subjects[appState.activeSubject];
     if (!subj) return;
-    var assess = subj[appState.activeTab.startsWith('term') ? appState.activeTab : 'term1'];
-    if (!assess) return;
+    var tab = appState.activeTab && appState.activeTab.indexOf("term") === 0 ? appState.activeTab : "term1";
+    var assess = subj[tab];
+    if (!assess || !termHasData(assess)) {
+      if (showToastMsg) showToast("Nothing to log yet — enter some scores first");
+      return;
+    }
 
     var res = calculateTerm(assess);
     var now = new Date();
     var timeStr = now.getFullYear() + "-" +
-                  String(now.getMonth()+1).padStart(2, '0') + "-" +
-                  String(now.getDate()).padStart(2, '0') + " " +
-                  String(now.getHours()).padStart(2, '0') + ":" +
-                  String(now.getMinutes()).padStart(2, '0') + ":" +
-                  String(now.getSeconds()).padStart(2, '0');
-
-    var termLabel = (appState.activeTab.startsWith('term')) ? appState.activeTab.replace('term', 'Term ') : 'Term 1';
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0") + " " +
+      String(now.getHours()).padStart(2, "0") + ":" +
+      String(now.getMinutes()).padStart(2, "0") + ":" +
+      String(now.getSeconds()).padStart(2, "0");
 
     var entry = {
       timestamp: timeStr,
-      gradeSection: "Grade " + (appState.profile.grade || "7") + " - " + (appState.profile.section || "General"),
-      name: appState.profile.name || "Student Learner",
-      term: termLabel,
-      subject: appState.activeSubject || "Mathematics",
-      wwSummary: res.ww.ps.toFixed(1) + "% (WS: " + res.ww.ws.toFixed(1) + "/" + assess.weights.ww + ")",
-      ptSummary: res.pt.ps.toFixed(1) + "% (WS: " + res.pt.ws.toFixed(1) + "/" + assess.weights.pt + ")",
-      exSummary: res.ex.ps.toFixed(1) + "% (WS: " + res.ex.ws.toFixed(1) + "/" + assess.weights.ex + ")",
-      finalGrade: res.transmutedGrade + " (" + res.descriptor.short + ")"
+      gradeSection: "Grade " + (appState.profile.grade || "7") + (appState.profile.section ? " – " + appState.profile.section : ""),
+      name: appState.profile.name || "(unnamed learner)",
+      term: tab.replace("term", "Term "),
+      subject: appState.activeSubject || "—",
+      wwSummary: res.ww.ps.toFixed(1) + "% · WS " + res.ww.ws.toFixed(1) + "/" + assess.weights.ww,
+      ptSummary: res.pt.ps.toFixed(1) + "% · WS " + res.pt.ws.toFixed(1) + "/" + assess.weights.pt,
+      exSummary: res.ex.ps.toFixed(1) + "% · WS " + res.ex.ws.toFixed(1) + "/" + assess.weights.ex,
+      finalGrade: res.transmutedGrade + " (" + res.descriptor.title + ")"
     };
 
+    var logs = getStoredLogs();
     logs.unshift(entry);
     if (logs.length > 25) logs = logs.slice(0, 25);
     localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(logs));
     renderAccessLog();
-    if (showToastMsg) showToast("Current calculation logged to access history!");
-  } catch(e) { console.warn("Log write error:", e); }
+    if (showToastMsg) showToast("Current calculation logged");
+  } catch (e) { console.warn("Log write error:", e); }
 }
 
 function renderAccessLog() {
   var tbody = document.getElementById("access-log-tbody");
   if (!tbody) return;
   var logs = getStoredLogs();
+  if (!logs.length) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="log-empty">No activity recorded yet. Saved calculations will appear here, with private details blurred.</div></td></tr>';
+    return;
+  }
   var html = "";
-
-  logs.forEach(function(l) {
-    html += '<tr>' +
-      '<td><span class="visible-badge" style="background:#e0f2fe; color:#0369a1;">📅 ' + escapeHtml(l.timestamp) + '</span></td>' +
-      '<td><span class="visible-badge">🏫 ' + escapeHtml(l.gradeSection) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential Learner Name">' + escapeHtml(l.name) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.term) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.subject) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.wwSummary) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.ptSummary) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.exSummary) + '</span></td>' +
-      '<td><span class="blurred-field" title="🔒 Confidential">' + escapeHtml(l.finalGrade) + '</span></td>' +
-    '</tr>';
+  logs.forEach(function (l) {
+    html += "<tr>" +
+      '<td data-label="Date &amp; Time"><span class="visible-badge time">' + escapeHtml(l.timestamp) + "</span></td>" +
+      '<td data-label="Grade &amp; Section"><span class="visible-badge">' + escapeHtml(l.gradeSection) + "</span></td>" +
+      '<td data-label="Learner Name"><span class="blurred-field">' + escapeHtml(l.name) + "</span></td>" +
+      '<td data-label="Term"><span class="blurred-field">' + escapeHtml(l.term) + "</span></td>" +
+      '<td data-label="Subject"><span class="blurred-field">' + escapeHtml(l.subject) + "</span></td>" +
+      '<td data-label="Written Works"><span class="blurred-field">' + escapeHtml(l.wwSummary) + "</span></td>" +
+      '<td data-label="Performance Tasks"><span class="blurred-field">' + escapeHtml(l.ptSummary) + "</span></td>" +
+      '<td data-label="Summative Exam"><span class="blurred-field">' + escapeHtml(l.exSummary) + "</span></td>" +
+      '<td data-label="Final Grade"><span class="blurred-field">' + escapeHtml(l.finalGrade) + "</span></td>" +
+    "</tr>";
   });
-
   tbody.innerHTML = html;
 }
 
 function clearAccessLog() {
-  if (confirm("Reset access activity logs for this device?")) {
+  if (confirm("Clear the activity log on this device?")) {
     localStorage.removeItem(LOG_STORAGE_KEY);
     renderAccessLog();
-    showToast("Access logs reset.");
+    showToast("Activity log cleared");
   }
 }
 
 /* ==========================================================================
-   BACKUP & EXPORT
+   BACKUP & RESTORE
    ========================================================================== */
 function exportDataJSON() {
   var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
   var a = document.createElement("a");
-  var filename = "GradeCalc_" + (appState.profile.name || "Student").replace(/[^a-z0-9]/gi, '_') + "_" + appState.profile.grade + "-" + appState.profile.section + ".json";
+  var label = (appState.profile.name || "Student").replace(/[^a-z0-9]/gi, "_");
   a.setAttribute("href", dataStr);
-  a.setAttribute("download", filename);
+  a.setAttribute("download", "GradeCalc_" + label + "_" + appState.profile.grade + "-" + (appState.profile.section || "All") + ".json");
   document.body.appendChild(a);
   a.click();
   a.remove();
-  showToast("Backup JSON file exported!");
+  showToast("Backup file exported");
 }
 
 function importDataJSON() {
@@ -2249,19 +1699,22 @@ function handleFileImport(event) {
   var file = event.target.files[0];
   if (!file) return;
   var reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     try {
       var imported = JSON.parse(e.target.result);
       if (imported && imported.subjects) {
         appState = imported;
+        stripLegacyDemoProfile();
+        if (!appState.activeTab) appState.activeTab = "term1";
         renderAll();
+        switchTab(appState.activeTab);
         saveToDevice(true);
-        showToast("Student grades imported successfully!");
+        showToast("Backup imported successfully");
       } else {
         alert("Invalid JSON format.");
       }
     } catch (err) {
-      alert("Failed to parse JSON backup file: " + err.message);
+      alert("Failed to read backup file: " + err.message);
     }
   };
   reader.readAsText(file);
@@ -2269,7 +1722,7 @@ function handleFileImport(event) {
 }
 
 /* ==========================================================================
-   INITIALIZATION & BOOT
+   BOOT
    ========================================================================== */
 function renderAll() {
   document.getElementById("prof-name").value = appState.profile.name || "";
@@ -2278,20 +1731,7 @@ function renderAll() {
   document.getElementById("prof-school").value = appState.profile.school || "";
 
   renderSubjectNav();
-
-  // Update tab badges
-  var subj = appState.subjects[appState.activeSubject];
-  if (subj) {
-    var t1 = calculateTerm(subj.term1).transmutedGrade;
-    var t2 = calculateTerm(subj.term2).transmutedGrade;
-    var t3 = calculateTerm(subj.term3).transmutedGrade;
-    var fin = calculateSubjectFinal(subj).finalGrade;
-
-    document.getElementById("tab-badge-term1").textContent = t1;
-    document.getElementById("tab-badge-term2").textContent = t2;
-    document.getElementById("tab-badge-term3").textContent = t3;
-    document.getElementById("tab-badge-summary").textContent = fin;
-  }
+  refreshBadges();
 
   if (appState.activeTab === "term1" || appState.activeTab === "term2" || appState.activeTab === "term3") {
     renderTermView(appState.activeTab);
@@ -2300,7 +1740,6 @@ function renderAll() {
   } else if (appState.activeTab === "goal") {
     calculateGoal();
   }
-
   renderAccessLog();
 }
 
@@ -2313,12 +1752,19 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+  /* Calculator-style: focusing any number field selects its content so typing replaces it */
+  document.addEventListener("focusin", function (e) {
+    if (e.target && e.target.type === "number") {
+      try { e.target.select(); } catch (err) {}
+    }
+  });
+
   loadFromStorage();
   renderAll();
-  switchTab("term1");
+  switchTab(appState.activeTab || "term1");
 });
 </script>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f610e82a276a6e',t:'MTc5MDEyOTk4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
